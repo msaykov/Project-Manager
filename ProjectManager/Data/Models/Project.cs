@@ -28,7 +28,8 @@ namespace ProjectManager.Data.Models
 
         public DateTime EndDate { get; set; }
 
-        [Required]
+        public int StatusId { get; set; }
+        
         public Status Status { get; set; }
 
         public IEnumerable<ProjectsMaterial> Materials { get; private set; } = new List<ProjectsMaterial>();
