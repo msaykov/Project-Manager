@@ -1,9 +1,12 @@
 ﻿@model AddProjectFormModel
 
-@{ 
+@{
     ViewData["Title"] = "Add Project";
 }
 
+<div class="text-center">
+    <h1 class="display-4">Add Project</h1>
+</div>
 <form method="post">
     <div class="form-group">
         <label asp-for="Name"></label>
@@ -46,3 +49,4 @@
         </div>*@
     <input class="btn btn-primary" type="submit" value="Save" />
 </form>
+

@@ -66,6 +66,29 @@ namespace ProjectManager.Controllers
             this.data.SaveChanges();
 
             return RedirectToAction("Index", "Home");
+            //return RedirectToAction("Projects", "All");
+        }
+
+        public IActionResult Search() => View();
+
+        public IActionResult All()
+        {
+            var allProjects = this.data
+                .Projects
+                .OrderByDescending(p => p.Id)
+                .Select(p => new ListProjectViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Type = p.Type.Name,
+                    Town = p.Town.Name,
+                    Employee = p.Employee.Name,
+                    EndDate = p.EndDate.ToString("d"),
+                    Status = p.Status.Name
+                })
+                .ToList();
+
+            return View(allProjects);
         }
 
         private IEnumerable<ProjectStatusViewModel> GetProjectStatuses()
