@@ -26,6 +26,8 @@ namespace ProjectManager.Data.Models
 
         public Employee Employee { get; set; }
 
+        public string Description { get; set; }
+
         public DateTime EndDate { get; set; }
 
         public int StatusId { get; set; }

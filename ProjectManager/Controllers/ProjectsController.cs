@@ -19,7 +19,6 @@ namespace ProjectManager.Controllers
         {
             Statuses = this.GetProjectStatuses()
         });
-
         [HttpPost]
         public IActionResult Add(AddProjectFormModel project)
         {
@@ -68,8 +67,6 @@ namespace ProjectManager.Controllers
             return RedirectToAction(nameof(All));
             //return RedirectToAction("Index", "Home");
         }
-
-        public IActionResult Search() => View();
 
         public IActionResult All(string status, string townName, string type)
         {
@@ -134,14 +131,32 @@ namespace ProjectManager.Controllers
                 .Projects
                 .FirstOrDefault(p => p.Id == id);
 
+            var projectTown = this.data
+                .Towns
+                .FirstOrDefault(p => p.Id == currentProject.TownId);
+
+            var projectType = this.data
+                .Types
+                .FirstOrDefault(p => p.Id == currentProject.TypeId);
+
+            var projectStatus = this.data
+                .Statuses
+                .FirstOrDefault(p => p.Id == currentProject.StatusId);
+
+            var projectEmployee= this.data
+                .Employees
+                .FirstOrDefault(p => p.Id == currentProject.EmployeeId);
+
+
             return View(new ProjectInfoViewModel
             {
+                Id = id,
                 Name = currentProject.Name,
-                Type = currentProject.Type.Name,
-                Town = currentProject.Town.Name,
-                Employee = currentProject.Employee.Name,
                 EndDate = currentProject.EndDate.ToString("d"),
-                Status = currentProject.Status.Name,
+                Status = projectStatus.Name,
+                Town = projectTown.Name,
+                Type = projectType.Name,
+                Employee = projectEmployee.Name,
                 //Materials = currentProject.Pro
             });
         }
