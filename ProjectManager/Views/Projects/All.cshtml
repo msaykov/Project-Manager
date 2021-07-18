@@ -1,33 +1,69 @@
-﻿@model IEnumerable<ListProjectViewModel>
+﻿@model ProjectsSearchViewModel
 
+
+<form method="GET">
+    <div class="row mb-5">
+        <div class="form-group col-md-4">
+            <label asp-for="Type"></label>
+            <select asp-for="Type" class="form-control">
+                <option value="">all</option>
+                @foreach (var type in Model.Types)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Status"></label>
+            <select asp-for="Status" class="form-control">
+                <option value="">all</option>
+                @foreach (var status in Model.Statuses)
+                {
+                    <option value="@status">@status</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="TownName"></label>
+            <input asp-for="TownName" class="form-control" id="validationTooltip01" placeholder="Town name...">
+            <span asp-validation-for="TownName" class="small text-danger"></span>
+        </div>
+    </div>
+    <button>Search</button>
+</form>
 
 <div class="text-center">
     <h1 class="display-4">All Projects</h1>
 </div>
-<table class="table table-striped">
+<table class="table table-hover">
     <thead>
-        <tr>
-            <th scope="col">ID</th>
+        <tr class="clickable text-center">
+            @*<th scope="col">ID</th>*@
             <th scope="col">Name</th>
             <th scope="col">Type</th>
             <th scope="col">Town</th>
-            <th scope="col">Employee</th>
+            @*<th scope="col">Employee</th>*@
             <th scope="col">End Date</th>
             <th scope="col">Status</th>
+            <th scope="col">Details</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var project in Model)
+        @foreach (var project in Model.Projects)
         {
-            <tr>
-                <th scope="row">@project.Id</th>
-                <td>@project.Name</td>
-                <td>@project.Type</td>
-                <td>@project.Town</td>
-                <td>@project.Employee</td>
-                <td>@project.EndDate</td>
-                <td>@project.Status</td>
-            </tr>             
+        <tr class="clickable text-center">
+            @*asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id"*@
+            <td>@project.Name</td>
+            <td>@project.Type</td>
+            <td>@project.Town</td>
+            @*<td>@project.Employee</td>*@
+            <td>@project.EndDate</td>
+            <td>@project.Status</td>
+            <td>
+                <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="btn btn-primary btn-sm" role="button">Learn more</a>
+            </td>
+        </tr>            
+        
         }
     </tbody>
 </table>

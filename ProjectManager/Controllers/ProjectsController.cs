@@ -65,16 +65,35 @@ namespace ProjectManager.Controllers
             this.data.Projects.Add(projectEntity);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
-            //return RedirectToAction("Projects", "All");
+            return RedirectToAction(nameof(All));
+            //return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Search() => View();
 
-        public IActionResult All()
+        public IActionResult All(string status, string townName, string type)
         {
-            var allProjects = this.data
-                .Projects
+            var projectsQuery = this.data.Projects.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                projectsQuery = projectsQuery
+                    .Where(s => s.Status.Name == status);
+            }
+
+            if (!string.IsNullOrWhiteSpace(type))
+            {
+                projectsQuery = projectsQuery
+                    .Where(t => t.Type.Name == type);
+            }
+
+            if (!string.IsNullOrWhiteSpace(townName))
+            {
+                projectsQuery = projectsQuery
+                    .Where(tn => tn.Town.Name.ToLower().Contains(townName.ToLower()));
+            }
+
+            var allProjects = projectsQuery
                 .OrderByDescending(p => p.Id)
                 .Select(p => new ListProjectViewModel
                 {
@@ -82,13 +101,49 @@ namespace ProjectManager.Controllers
                     Name = p.Name,
                     Type = p.Type.Name,
                     Town = p.Town.Name,
-                    Employee = p.Employee.Name,
+                    //Employee = p.Employee.Name,
                     EndDate = p.EndDate.ToString("d"),
                     Status = p.Status.Name
                 })
                 .ToList();
 
-            return View(allProjects);
+            var projectStatuses = this.data
+                .Projects
+                .Select(s => s.Status.Name)
+                .Distinct()
+                .ToList();
+
+            var projectTypes = this.data
+               .Projects
+               .Select(s => s.Type.Name)
+               .Distinct()
+               .ToList();
+
+            return View(new ProjectsSearchViewModel
+            {
+                Projects = allProjects,
+                TownName = townName,
+                Statuses = projectStatuses,
+                Types = projectTypes,
+            });
+        }
+
+        public IActionResult Details(int id)
+        {
+            var currentProject = this.data
+                .Projects
+                .FirstOrDefault(p => p.Id == id);
+
+            return View(new ProjectInfoViewModel
+            {
+                Name = currentProject.Name,
+                Type = currentProject.Type.Name,
+                Town = currentProject.Town.Name,
+                Employee = currentProject.Employee.Name,
+                EndDate = currentProject.EndDate.ToString("d"),
+                Status = currentProject.Status.Name,
+                //Materials = currentProject.Pro
+            });
         }
 
         private IEnumerable<ProjectStatusViewModel> GetProjectStatuses()
