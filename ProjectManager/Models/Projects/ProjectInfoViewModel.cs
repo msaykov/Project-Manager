@@ -10,11 +10,13 @@
 
         public string Town { get; set; }
 
-        public string Employee { get; set; }
+        public string Owner { get; set; }
 
         public string EndDate { get; set; }
 
         public string Status { get; set; }
+
+        public string Description { get; set; }
 
         //public decimal Materials { get; set; }
     }

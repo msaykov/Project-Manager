@@ -7,8 +7,14 @@ namespace ProjectManager.Data
 {
     public class DataConstants
     {
-        public const int ProjectNameMaxLength = 30;
-        public const int ProjectNameMinLength = 2;
+        public class Project
+        {
+            public const int ProjectNameMaxLength = 30;
+            public const int ProjectNameMinLength = 2;
+            public const int ProjectDescriptionMinLength = 10;
+            public const int ProjectDescriptionMaxLength = 1000;
+        }
+        
 
         public const int TownNameMinLength = 3;
         public const int TownNameMaxLength = 30;
@@ -20,7 +26,7 @@ namespace ProjectManager.Data
         public const int StatusNameMaxLength = 20;
 
         public const int EmployeeNameMinLength = 2;
-        public const int EmployeeNameMaxLength = 30;
+        public const int EmployeeNameMaxLength = 30;       
 
         public const int MaterialNameMaxLength = 200;
 

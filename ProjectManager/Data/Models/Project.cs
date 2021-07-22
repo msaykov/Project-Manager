@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using static ProjectManager.Data.DataConstants;
+using static ProjectManager.Data.DataConstants.Project;
 
 namespace ProjectManager.Data.Models
 {
@@ -14,7 +14,7 @@ namespace ProjectManager.Data.Models
         [MaxLength(ProjectNameMaxLength)]
         public string Name { get; set; }
 
-        public int TypeId { get; set; }
+        public int TypeId { get; private set; }
 
         public Type Type { get; set; }
 
@@ -22,11 +22,19 @@ namespace ProjectManager.Data.Models
 
         public Town Town { get; set; }
 
-        public int EmployeeId { get; private set; }
+        public int OwnerId { get; private set; }
 
-        public Employee Employee { get; set; }
+        public Owner Owner { get; set; }
 
+        //public string EmployeeId { get; private set; }
+
+        //public Employee Employee { get; set; }
+
+        [Required]
+        [MaxLength(ProjectDescriptionMaxLength)]
         public string Description { get; set; }
+
+        public DateTime StartDate { get; private set; } = DateTime.Now;
 
         public DateTime EndDate { get; set; }
 

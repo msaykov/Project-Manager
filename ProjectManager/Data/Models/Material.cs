@@ -13,9 +13,9 @@ namespace ProjectManager.Data.Models
         [Required]
         [MaxLength(MaterialNameMaxLength)]
         public string Name { get; private set; }
-
+        
         public int SapNumber { get; private set; }
-
+        
         public double Price { get; private set; }
 
         public int TypeId { get; set; }

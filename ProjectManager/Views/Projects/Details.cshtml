@@ -9,14 +9,6 @@
     <h1 class="item-title">@ViewData["Title"]</h1>
 </div>
 
-
-@*<h1>@Model.Name</h1>
-    <h1>@Model.Type</h1>
-    <h1>@Model.Town</h1>
-    <h1>@Model.Status</h1>
-    <h1>@Model.EndDate</h1>
-    <h1>@Model.Employee</h1>*@
-
 <div>
     <header>
         <div class="row">
@@ -38,6 +30,12 @@
                 </li>
                 <li class="card row-3">
                     <div>
+                        <strong>Type:</strong>
+                        <span>@Model.Type</span>
+                    </div>
+                </li>
+                <li class="card row-3">
+                    <div>
                         <strong>End Date:</strong>
                         <span>@Model.EndDate</span>
                     </div>
@@ -50,17 +48,18 @@
                 </li>
                 <li class="card row-3">
                     <div>
-                        <strong>Type:</strong>
-                        <span>@Model.Type</span>
+                        <strong>Owner:</strong>
+                        <span>@Model.Owner</span>
                     </div>
                 </li>
             </ul>
             <div class="col-9">
                 <h3>Description:</h3>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+                <p>@Model.Description</p>
             </div>
         </div>
         <div class="col-9">
+            <a asp-controller="Projects" asp-action="Materials" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
             <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
             <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
         </div>

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Data;
 using ProjectManager.Data.Models;
 using ProjectManager.Models.Projects;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace ProjectManager.Controllers
 {
@@ -15,21 +17,26 @@ namespace ProjectManager.Controllers
         public ProjectsController(ProjectManagerDbContext data)
             => this.data = data;
 
-        public IActionResult Add() => View(new AddProjectFormModel
-        {
-            Statuses = this.GetProjectStatuses()
-        });
+        [Authorize]
+        public IActionResult Add() => View();
+
+        //public IActionResult Add() => View(new AddProjectFormModel
+        //{
+        //    Statuses = this.GetProjectStatuses()
+        //});
+
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddProjectFormModel project)
         {
-            if (!this.data.Statuses.Any(s => s.Id == project.StatusId))
-            {
-                this.ModelState.AddModelError(nameof(project.StatusId), "Status does not exist.");
-            }
+            //if (!this.data.Statuses.Any(s => s.Id == project.StatusId))
+            //{
+            //    this.ModelState.AddModelError(nameof(project.StatusId), "Status does not exist.");
+            //}
 
             if (!ModelState.IsValid)
             {
-                project.Statuses = this.GetProjectStatuses();
+                //project.Statuses = this.GetProjectStatuses();
                 return View(project);
             }
 
@@ -43,10 +50,26 @@ namespace ProjectManager.Controllers
                 .FirstOrDefault(t => t.Name == project.Town);
             var projectTown = currentTown == null ? new Town { Name = project.Town } : currentTown;
 
-            var currentEmployee = this.data
-                .Employees
-                .FirstOrDefault(e => e.Name == project.Employee);
-            var projectEmployee = currentEmployee == null ? new Employee { Name = project.Employee } : currentEmployee;
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = this.User.FindFirst(ClaimTypes.Email).Value;
+            //var userPhone = this.User.FindFirst(ClaimTypes.Email).Value;
+            
+            
+
+            var currentStatus = this.data
+               .Statuses
+               .FirstOrDefault(s => s.Name == "New");
+            var projectStatus = currentStatus == null ? new Status { Name = "New" } : currentStatus;
+
+            var currentOwner = this.data
+                .Owners
+                .FirstOrDefault(e => e.UserId == userId);
+            var projectOwner = currentOwner == null ? new Owner { UserId = userId , Name = userName } : currentOwner;
+
+            //var currentEmployee = this.data
+            //    .Employees
+            //    .FirstOrDefault(e => e.Name == project.Employee);
+            //var projectEmployee = currentEmployee == null ? new Employee { Name = project.Employee } : currentEmployee;
 
             System.DateTime date;
             System.DateTime.TryParse(project.EndDate, out date);
@@ -56,9 +79,10 @@ namespace ProjectManager.Controllers
                 Name = project.Name,
                 Type = projectType,
                 Town = projectTown,
-                Employee = projectEmployee,
                 EndDate = date,
-                StatusId = project.StatusId
+                Status = projectStatus,
+                Description = project.Description,
+                Owner = projectOwner,
             };
 
             this.data.Projects.Add(projectEntity);
@@ -127,9 +151,7 @@ namespace ProjectManager.Controllers
 
         public IActionResult Details(int id)
         {
-            var currentProject = this.data
-                .Projects
-                .FirstOrDefault(p => p.Id == id);
+            var currentProject = GetProjectById(id);
 
             var projectTown = this.data
                 .Towns
@@ -143,9 +165,9 @@ namespace ProjectManager.Controllers
                 .Statuses
                 .FirstOrDefault(p => p.Id == currentProject.StatusId);
 
-            var projectEmployee= this.data
-                .Employees
-                .FirstOrDefault(p => p.Id == currentProject.EmployeeId);
+            var projectOwner= this.data
+                .Owners
+                .FirstOrDefault(p => p.Id == currentProject.OwnerId);
 
 
             return View(new ProjectInfoViewModel
@@ -156,10 +178,53 @@ namespace ProjectManager.Controllers
                 Status = projectStatus.Name,
                 Town = projectTown.Name,
                 Type = projectType.Name,
-                Employee = projectEmployee.Name,
+                Owner = projectOwner.Name,
+                Description = currentProject.Description,
                 //Materials = currentProject.Pro
             });
         }
+
+        public IActionResult Edit(int id) 
+        {
+            var currentProject = GetProjectById(id);
+
+            var projectTown = this.data
+                .Towns
+                .FirstOrDefault(p => p.Id == currentProject.TownId);
+
+            var projectType = this.data
+                .Types
+                .FirstOrDefault(p => p.Id == currentProject.TypeId);
+
+            var projectStatus = this.data
+                .Statuses
+                .FirstOrDefault(p => p.Id == currentProject.StatusId);
+
+            var projectOwner = this.data
+                .Owners
+                .FirstOrDefault(p => p.Id == currentProject.OwnerId);
+
+
+            return View(new EditProjectViewModel
+            {
+                Id = id,
+                Name = currentProject.Name,
+                Town = projectTown.Name,
+                Type = projectType.Name,
+                Owner = projectOwner.Name,
+                EndDate = currentProject.EndDate.ToString("d"),
+                Status = projectStatus.Name,
+                Description = currentProject.Description,
+            });
+        }
+
+        //[HttpPost]
+        //public IActionResult Edit(int id) 
+        //{
+        //    return View(new a)
+        //}
+
+
 
         private IEnumerable<ProjectStatusViewModel> GetProjectStatuses()
             => this.data
@@ -170,5 +235,10 @@ namespace ProjectManager.Controllers
                 Name = s.Name
             })
             .ToList();
+
+        private Project GetProjectById(int id)
+            => this.data
+            .Projects
+            .FirstOrDefault(p => p.Id == id);
     }
 }

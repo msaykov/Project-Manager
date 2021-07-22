@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.Models.Projects
 {
+    using static Data.DataConstants.Project;
     using static Data.DataConstants;
     public class AddProjectFormModel
     {
@@ -16,10 +17,10 @@ namespace ProjectManager.Models.Projects
         [StringLength(TypeNameMaxLength, MinimumLength = TypeNameMinLength, ErrorMessage = NamesErrorMsg)]
         public string Type { get; set; }
 
-        [Display(Name = "Employee Name")]
-        [Required]
-        [StringLength(EmployeeNameMaxLength, MinimumLength = EmployeeNameMinLength, ErrorMessage = NamesErrorMsg)]
-        public string Employee { get; set; }
+        //[Display(Name = "Employee Name")]
+        //[Required]
+        //[StringLength(EmployeeNameMaxLength, MinimumLength = EmployeeNameMinLength, ErrorMessage = NamesErrorMsg)]
+        //public string Employee { get; set; }
 
         [Required]
         [StringLength(TownNameMaxLength, MinimumLength = TownNameMinLength, ErrorMessage = NamesErrorMsg)]
@@ -30,11 +31,14 @@ namespace ProjectManager.Models.Projects
         //[RegularExpression(DateRegEx)]
         public string EndDate { get; set; }
 
-        [Display(Name = "Project Status")]
-        [Required]
-        public int StatusId { get; set; }
+        //[Display(Name = "Project Status")]
+        //[Required]
+        //public int StatusId { get; set; }
 
-        public IEnumerable<ProjectStatusViewModel> Statuses { get; set; }
-    }
-    //public string Employee { get; set; }
+        //public IEnumerable<ProjectStatusViewModel> Statuses { get; set; }
+
+        [Required]
+        [StringLength(ProjectDescriptionMaxLength, MinimumLength = ProjectDescriptionMinLength, ErrorMessage = NamesErrorMsg)]
+        public string Description { get; set; }
+    }    
 }
