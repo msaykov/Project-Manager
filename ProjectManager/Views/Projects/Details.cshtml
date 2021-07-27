@@ -56,10 +56,11 @@
             <div class="col-9">
                 <h3>Description:</h3>
                 <p>@Model.Description</p>
+                <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
             </div>
         </div>
         <div class="col-9">
-            <a asp-controller="Projects" asp-action="Materials" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
+            <a asp-controller="Materials" asp-action="All"  asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
             <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
             <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
         </div>

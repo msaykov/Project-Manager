@@ -4,19 +4,20 @@
     using System.ComponentModel.DataAnnotations;
     using static ProjectManager.Data.DataConstants;
 
-    public class Town
+    public class MaterialType
     {
-        public Town()
+        public MaterialType()
         {
-            this. Projects = new List<Project>();
+             this.Materials = new List<Material>();
         }
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [Required]
-        [MaxLength(TownNameMaxLength)]
+        [MaxLength(TypeNameMaxLength)]
         public string Name { get; set; }
 
-        public IEnumerable<Project> Projects { get; private set; }
+        public IEnumerable<Material> Materials { get; private set; }
+
     }
 }

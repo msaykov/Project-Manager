@@ -1,0 +1,63 @@
+﻿@model ListMaterialViewModel
+@{
+    ViewData["Title"] = "Project Materials";
+}
+
+<div class="text-center">
+    <h1 class="item-title">@ViewData["Title"]</h1>
+</div>
+
+
+@if (!Model.Materials.Any())
+{
+<div class=" text-center">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Oooops!</h4>
+        <p>There is no materials added to this project.</p>
+        <hr>
+        <p class="mb-0">Click button below to add some.</p>
+    </div>
+    <div>
+        <a asp-controller="Materials" asp-action="Add" asp-route-id="@Model.ProjectId" class="btn btn-primary">Add materials</a>
+        <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Cancel</a>
+    </div>
+</div>
+}
+else
+{
+    <div>
+        <div>
+            <table class="table table-hover">
+                <thead>
+                    <tr class="clickable text-center">
+                        <th scope="col">SapNumber</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var material in Model.Materials)
+                    {
+                        <tr class="clickable text-center">
+                            <td>@material.SapNumber</td>
+                            <td>@material.Name</td>
+                            <td>@material.Type</td>
+                            <td>@material.Price</td>
+                            <td>@material.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class=" text-center">
+            <a asp-controller="Materials" asp-action="Add" class="btn btn-primary">Add materials</a>
+            <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Cancel</a>
+        </div>
+    </div>
+}
+
+
+
+

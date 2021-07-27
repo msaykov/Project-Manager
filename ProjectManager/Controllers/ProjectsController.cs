@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using ProjectManager.Data;
-using ProjectManager.Data.Models;
-using ProjectManager.Models.Projects;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-
-namespace ProjectManager.Controllers
+﻿namespace ProjectManager.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using ProjectManager.Data;
+    using ProjectManager.Data.Models;
+    using ProjectManager.Models.Projects;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+
     public class ProjectsController : Controller
 
     {
@@ -43,7 +43,7 @@ namespace ProjectManager.Controllers
             var currentType = this.data
                 .Types
                 .FirstOrDefault(t => t.Name == project.Type);
-            var projectType = currentType == null ? new Type { Name = project.Type } : currentType;
+            var projectType = currentType == null ? new ProjectType { Name = project.Type } : currentType;
 
             var currentTown = this.data
                 .Towns
@@ -218,11 +218,46 @@ namespace ProjectManager.Controllers
             });
         }
 
-        //[HttpPost]
-        //public IActionResult Edit(int id) 
-        //{
-        //    return View(new a)
-        //}
+        [HttpPost]
+        public IActionResult Edit(int id , EditProjectViewModel project)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(project);
+            }
+
+
+            
+            var currentType = this.data
+                .Types
+                .FirstOrDefault(t => t.Name == project.Type);
+            var projectType = currentType == null ? new ProjectType { Name = project.Type } : currentType;
+
+            var currentTown = this.data
+                .Towns
+                .FirstOrDefault(t => t.Name == project.Town);
+            var projectTown = currentTown == null ? new Town { Name = project.Town } : currentTown;
+
+            System.DateTime date;
+            System.DateTime.TryParse(project.EndDate, out date);
+
+
+
+
+            var currentProject = GetProjectById(id);
+
+            currentProject.Name = project.Name;
+            currentProject.Town = projectTown;
+            currentProject.Type = projectType;
+            //currentProject.Owner.Name = project.Owner;
+            currentProject.EndDate = date;
+            //currentProject.Status.Name = project.Status;
+            currentProject.Description = project.Description;
+
+            this.data.SaveChanges();
+
+            return RedirectToAction(nameof(All));
+        }
 
 
 

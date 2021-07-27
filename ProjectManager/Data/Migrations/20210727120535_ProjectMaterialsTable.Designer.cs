@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectManager.Data;
 
 namespace ProjectManager.Data.Migrations
 {
     [DbContext(typeof(ProjectManagerDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210727120535_ProjectMaterialsTable")]
+    partial class ProjectMaterialsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,23 +340,6 @@ namespace ProjectManager.Data.Migrations
                     b.ToTable("ProjectMaterials");
                 });
 
-            modelBuilder.Entity("ProjectManager.Data.Models.ProjectType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Types");
-                });
-
             modelBuilder.Entity("ProjectManager.Data.Models.Status", b =>
                 {
                     b.Property<int>("Id")
@@ -386,6 +371,23 @@ namespace ProjectManager.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Towns");
+                });
+
+            modelBuilder.Entity("ProjectManager.Data.Models.Type", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -441,8 +443,8 @@ namespace ProjectManager.Data.Migrations
 
             modelBuilder.Entity("ProjectManager.Data.Models.Material", b =>
                 {
-                    b.HasOne("ProjectManager.Data.Models.ProjectType", "Type")
-                        .WithMany()
+                    b.HasOne("ProjectManager.Data.Models.Type", "Type")
+                        .WithMany("Materials")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -478,7 +480,7 @@ namespace ProjectManager.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectManager.Data.Models.ProjectType", "Type")
+                    b.HasOne("ProjectManager.Data.Models.Type", "Type")
                         .WithMany("Projects")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -527,11 +529,6 @@ namespace ProjectManager.Data.Migrations
                     b.Navigation("Materials");
                 });
 
-            modelBuilder.Entity("ProjectManager.Data.Models.ProjectType", b =>
-                {
-                    b.Navigation("Projects");
-                });
-
             modelBuilder.Entity("ProjectManager.Data.Models.Status", b =>
                 {
                     b.Navigation("Projects");
@@ -539,6 +536,13 @@ namespace ProjectManager.Data.Migrations
 
             modelBuilder.Entity("ProjectManager.Data.Models.Town", b =>
                 {
+                    b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("ProjectManager.Data.Models.Type", b =>
+                {
+                    b.Navigation("Materials");
+
                     b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618

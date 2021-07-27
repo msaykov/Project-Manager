@@ -7,7 +7,7 @@
 <div class="text-center">
     <h1 class="item-title">@ViewData["Title"]</h1>
 </div>
-<form method="PUT">
+<form method="post">
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" id="validationTooltip01">
@@ -48,8 +48,9 @@
             <label for="exampleFormControlTextarea1">Example textarea</label>
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
         </div>*@
-    <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary" role="button">Edit</a>
-    <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary" role="button">Cancel</a>
+    <button class="btn btn-primary">Edit</button>
+    @*<a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary" role="button">Edit</a>*@
+    <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-danger" role="button">Cancel</a>
 
 
 </form>

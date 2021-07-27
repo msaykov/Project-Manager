@@ -1,5 +1,9 @@
-﻿namespace ProjectManager.Models.Projects
+﻿
+namespace ProjectManager.Models.Projects
 {
+    using ProjectManager.Data.Models;
+    using System.Collections.Generic;
+
     public class ProjectInfoViewModel
     {
         public int Id { get; set; }
@@ -18,6 +22,6 @@
 
         public string Description { get; set; }
 
-        //public decimal Materials { get; set; }
+        public IEnumerable<Material> Materials { get; set; } = new List<Material>();
     }
 }

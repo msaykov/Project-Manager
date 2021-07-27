@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace ProjectManager.Models.Projects
 {
+    using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants.Project;
     using static Data.DataConstants;
+
     public class AddProjectFormModel
     {
         [Display(Name = "Project Name")]
@@ -40,5 +40,5 @@ namespace ProjectManager.Models.Projects
         [Required]
         [StringLength(ProjectDescriptionMaxLength, MinimumLength = ProjectDescriptionMinLength, ErrorMessage = NamesErrorMsg)]
         public string Description { get; set; }
-    }    
+    }
 }

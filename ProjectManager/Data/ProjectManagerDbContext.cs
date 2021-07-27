@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using ProjectManager.Data.Models;
-
-namespace ProjectManager.Data
+﻿namespace ProjectManager.Data
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using ProjectManager.Data.Models;
+
     public class ProjectManagerDbContext : IdentityDbContext
     {
         
@@ -24,23 +24,27 @@ namespace ProjectManager.Data
         public DbSet<Material> Materials { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Town> Towns { get; set; }
-        public DbSet<Type> Types { get; set; }
+        public DbSet<ProjectType> Types { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder
-                .Entity<ProjectsMaterial>()
-                .HasOne(p => p.Project)
+                .Entity<ProjectMaterials>()
+                .HasOne<Project>(p => p.Project)
                 .WithMany(p => p.Materials)
                 .HasForeignKey(p => p.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
-                .Entity<ProjectsMaterial>()
-                .HasOne(p => p.Material)
+                .Entity<ProjectMaterials>()
+                .HasOne<Material>(p => p.Material)
                 .WithMany(m => m.Projects)
                 .HasForeignKey(m => m.MaterialId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<ProjectMaterials>()
+                .HasKey(pm => new { pm.ProjectId , pm.MaterialId });
 
             builder
                 .Entity<Project>()

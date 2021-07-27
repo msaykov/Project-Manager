@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using static ProjectManager.Data.DataConstants.Project;
-
-namespace ProjectManager.Data.Models
+﻿namespace ProjectManager.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using static ProjectManager.Data.DataConstants.Project;
+
     public class Project
     {
+        public Project()
+        {
+            this.Materials = new List<ProjectMaterials>();
+            this.StartDate = DateTime.Now;
+        }
         [Key]
         public int Id { get; private set; }
 
@@ -16,7 +21,7 @@ namespace ProjectManager.Data.Models
 
         public int TypeId { get; private set; }
 
-        public Type Type { get; set; }
+        public ProjectType Type { get; set; }
 
         public int TownId { get; private set; }
 
@@ -34,7 +39,7 @@ namespace ProjectManager.Data.Models
         [MaxLength(ProjectDescriptionMaxLength)]
         public string Description { get; set; }
 
-        public DateTime StartDate { get; private set; } = DateTime.Now;
+        public DateTime StartDate { get; private set; }
 
         public DateTime EndDate { get; set; }
 
@@ -42,7 +47,7 @@ namespace ProjectManager.Data.Models
         
         public Status Status { get; set; }
 
-        public IEnumerable<ProjectsMaterial> Materials { get; private set; } = new List<ProjectsMaterial>();
+        public IEnumerable<ProjectMaterials> Materials { get; set; }
 
         //public IEnumerable<Note> Notes { get; private set; } = new List<Note>();
 

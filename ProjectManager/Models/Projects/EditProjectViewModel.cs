@@ -1,5 +1,8 @@
-﻿namespace ProjectManager.Models.Projects
+﻿
+namespace ProjectManager.Models.Projects
 {
+    using System;
+
     public class EditProjectViewModel
     {
         public int Id { get; set; }

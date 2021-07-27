@@ -2,10 +2,11 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static ProjectManager.Data.DataConstants;
 
-    public class Status
+    public class ProjectType
     {
-        public Status()
+        public ProjectType()
         {
             this.Projects = new List<Project>();
         }
@@ -13,9 +14,10 @@
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(TypeNameMaxLength)]
         public string Name { get; set; }
 
-        public IEnumerable<Project> Projects { get; private set; }
-
+        public IEnumerable<Project> Projects { get; private set; } 
+       
     }
 }
