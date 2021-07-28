@@ -19,7 +19,7 @@
     </div>
     <div>
         <a asp-controller="Materials" asp-action="Add" asp-route-id="@Model.ProjectId" class="btn btn-primary">Add materials</a>
-        <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Cancel</a>
+        <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Go Back</a>
     </div>
 </div>
 }
@@ -52,8 +52,8 @@ else
             </table>
         </div>
         <div class=" text-center">
-            <a asp-controller="Materials" asp-action="Add" class="btn btn-primary">Add materials</a>
-            <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Cancel</a>
+            <a asp-controller="Materials" asp-action="Add" asp-route-id="@Model.ProjectId" class="btn btn-primary">Add materials</a>
+            <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Back</a>
         </div>
     </div>
 }

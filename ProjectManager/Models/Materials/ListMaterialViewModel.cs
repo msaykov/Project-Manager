@@ -7,6 +7,6 @@ namespace ProjectManager.Models.Materials
     {
         public int ProjectId { get; set; }
 
-        public IEnumerable<MaterialInfoViewModel> Materials { get; set; }
+        public ICollection<MaterialInfoViewModel> Materials { get; set; }
     }
 }

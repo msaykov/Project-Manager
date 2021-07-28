@@ -29,8 +29,10 @@ namespace ProjectManager.Infrastructure
             data.Statuses.AddRange(new[] 
             {
                 new Status{ Name= "New"},            
+                new Status{ Name= "Assigned"},            
                 new Status{ Name= "In Progres"},            
-                new Status{ Name= "Waiting"},            
+                new Status{ Name= "On Hold"},            
+                new Status{ Name= "Testing"},            
                 new Status{ Name= "Done"},            
             });
 

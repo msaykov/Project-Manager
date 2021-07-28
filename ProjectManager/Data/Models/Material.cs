@@ -9,7 +9,7 @@ namespace ProjectManager.Data.Models
     {
         public Material()
         {
-            this.Projects = new List<ProjectMaterials>();
+            this.Projects = new List<Project>();
         }
 
         [Key]
@@ -21,14 +21,14 @@ namespace ProjectManager.Data.Models
 
         public int SapNumber { get;  set; }
 
-        public double Price { get;  set; }
+        public decimal Price { get;  set; }
 
-        public int TypeId { get; set; }
+        public int MaterialTypeId { get; set; }
 
-        public ProjectType Type { get;  set; }
+        public MaterialType MaterialType { get;  set; }
 
         public int Quantity { get;  set; }
 
-        public IEnumerable<ProjectMaterials> Projects { get;  set; }
+        public ICollection<Project> Projects { get;  set; }
     }
 }

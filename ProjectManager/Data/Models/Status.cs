@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static ProjectManager.Data.DataConstants;
 
     public class Status
     {
@@ -13,6 +14,7 @@
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(StatusNameMaxLength)]
         public string Name { get; set; }
 
         public IEnumerable<Project> Projects { get; private set; }

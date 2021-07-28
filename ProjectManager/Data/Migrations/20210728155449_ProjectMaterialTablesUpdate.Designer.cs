@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectManager.Data;
 
 namespace ProjectManager.Data.Migrations
 {
     [DbContext(typeof(ProjectManagerDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210728155449_ProjectMaterialTablesUpdate")]
+    partial class ProjectMaterialTablesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,7 +252,7 @@ namespace ProjectManager.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(5,3)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -353,6 +355,21 @@ namespace ProjectManager.Data.Migrations
                     b.HasIndex("TownId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ProjectManager.Data.Models.ProjectMaterials", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectId", "MaterialId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.ToTable("ProjectMaterials");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.ProjectType", b =>
@@ -524,6 +541,25 @@ namespace ProjectManager.Data.Migrations
                     b.Navigation("Status");
 
                     b.Navigation("Town");
+                });
+
+            modelBuilder.Entity("ProjectManager.Data.Models.ProjectMaterials", b =>
+                {
+                    b.HasOne("ProjectManager.Data.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Data.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.MaterialType", b =>

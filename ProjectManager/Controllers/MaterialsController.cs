@@ -16,14 +16,13 @@
             => this.data = data;
 
         [Authorize]
-        public IActionResult Add(int id) => View();
+        public IActionResult Add() => View();
 
         [HttpPost]
         [Authorize]
         public IActionResult Add(AddMaterialFormModel material, int id) 
         {
-            var currentProject = GetProjectById(id);             
-
+            var currentProject = GetProjectById(id);
 
             if (!ModelState.IsValid)
             {
@@ -31,9 +30,9 @@
             }
 
             var currentType = this.data
-                .Types
+                .MaterialTypes
                 .FirstOrDefault(t => t.Name == material.Type);
-            var materialType = currentType == null ? new ProjectType { Name = material.Type } : currentType;
+            var materialType = currentType == null ? new MaterialType { Name = material.Type } : currentType;
 
             //var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             //var userName = this.User.FindFirst(ClaimTypes.Email).Value;
@@ -43,54 +42,33 @@
             var materialEntity = new Material
             {
                 Name = material.Name,
-                Type = materialType,
+                MaterialType = materialType,
                 SapNumber = material.SapNumber,
                 Price = material.Price,
                 Quantity = material.Quantity,
             };
-            this.data.Materials.Add(materialEntity);
+
+            currentProject.Materials.Add(materialEntity);
             this.data.SaveChanges();
 
-            var currentMaterial = this.data
-                .Materials
-                .FirstOrDefault(m => m.SapNumber == materialEntity.SapNumber);
-
-            var projectMaterialEntity = new ProjectMaterials
-            {
-                Material = materialEntity,
-                Project = currentProject,
-            };
-
-            currentProject.Materials.Append(projectMaterialEntity);
-            
-            this.data.SaveChanges();
-
-
-
-
-
-            
-
-
-
-            //this.data.SaveChanges();
 
             return RedirectToAction(nameof(All), new { id = id});
+            //return RedirectToAction("Details", "Projects", new { id = id });
         }
 
         public IActionResult All(int id)
         {
-            var currrentProject = GetProjectById(id);
-            var materials = currrentProject.Materials.ToList();
-
-            var allMaterials = materials
+            
+            var allMaterials = this.data
+                .Materials
+                .Where(m => m.Projects.Any(p => p.Id == id))
                 .Select(m => new MaterialInfoViewModel
                 {
-                    Name = m.Material.Name,
-                    Type = m.Material.Type.Name,
-                    SapNumber = m.Material.SapNumber,
-                    Price = m.Material.Price,
-                    Quantity = m.Material.Quantity
+                    Name = m.Name,
+                    Type = m.MaterialType.Name,
+                    SapNumber = m.SapNumber,
+                    Price = m.Price,
+                    Quantity = m.Quantity
                 })
                 .ToList();
 

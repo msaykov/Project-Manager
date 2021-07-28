@@ -5,6 +5,7 @@
     using ProjectManager.Data;
     using ProjectManager.Data.Models;
     using ProjectManager.Models.Projects;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
@@ -41,7 +42,7 @@
             }
 
             var currentType = this.data
-                .Types
+                .ProjectTypes
                 .FirstOrDefault(t => t.Name == project.Type);
             var projectType = currentType == null ? new ProjectType { Name = project.Type } : currentType;
 
@@ -71,13 +72,13 @@
             //    .FirstOrDefault(e => e.Name == project.Employee);
             //var projectEmployee = currentEmployee == null ? new Employee { Name = project.Employee } : currentEmployee;
 
-            System.DateTime date;
-            System.DateTime.TryParse(project.EndDate, out date);
+            DateTime date;
+            DateTime.TryParse(project.EndDate, out date);
 
             var projectEntity = new Project
             {
                 Name = project.Name,
-                Type = projectType,
+                ProjectType = projectType,
                 Town = projectTown,
                 EndDate = date,
                 Status = projectStatus,
@@ -105,7 +106,7 @@
             if (!string.IsNullOrWhiteSpace(type))
             {
                 projectsQuery = projectsQuery
-                    .Where(t => t.Type.Name == type);
+                    .Where(t => t.ProjectType.Name == type);
             }
 
             if (!string.IsNullOrWhiteSpace(townName))
@@ -120,7 +121,7 @@
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Type = p.Type.Name,
+                    Type = p.ProjectType.Name,
                     Town = p.Town.Name,
                     //Employee = p.Employee.Name,
                     EndDate = p.EndDate.ToString("d"),
@@ -136,7 +137,7 @@
 
             var projectTypes = this.data
                .Projects
-               .Select(s => s.Type.Name)
+               .Select(s => s.ProjectType.Name)
                .Distinct()
                .ToList();
 
@@ -158,8 +159,8 @@
                 .FirstOrDefault(p => p.Id == currentProject.TownId);
 
             var projectType = this.data
-                .Types
-                .FirstOrDefault(p => p.Id == currentProject.TypeId);
+                .ProjectTypes
+                .FirstOrDefault(p => p.Id == currentProject.ProjectTypeId);
 
             var projectStatus = this.data
                 .Statuses
@@ -193,8 +194,8 @@
                 .FirstOrDefault(p => p.Id == currentProject.TownId);
 
             var projectType = this.data
-                .Types
-                .FirstOrDefault(p => p.Id == currentProject.TypeId);
+                .ProjectTypes
+                .FirstOrDefault(p => p.Id == currentProject.ProjectTypeId);
 
             var projectStatus = this.data
                 .Statuses
@@ -229,7 +230,7 @@
 
             
             var currentType = this.data
-                .Types
+                .ProjectTypes
                 .FirstOrDefault(t => t.Name == project.Type);
             var projectType = currentType == null ? new ProjectType { Name = project.Type } : currentType;
 
@@ -248,7 +249,7 @@
 
             currentProject.Name = project.Name;
             currentProject.Town = projectTown;
-            currentProject.Type = projectType;
+            currentProject.ProjectType = projectType;
             //currentProject.Owner.Name = project.Owner;
             currentProject.EndDate = date;
             //currentProject.Status.Name = project.Status;

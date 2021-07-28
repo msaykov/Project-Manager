@@ -9,7 +9,7 @@
     {
         public Project()
         {
-            this.Materials = new List<ProjectMaterials>();
+            this.Materials = new List<Material>();
             this.StartDate = DateTime.Now;
         }
         [Key]
@@ -19,9 +19,9 @@
         [MaxLength(ProjectNameMaxLength)]
         public string Name { get; set; }
 
-        public int TypeId { get; private set; }
+        public int ProjectTypeId { get; private set; }
 
-        public ProjectType Type { get; set; }
+        public ProjectType ProjectType { get; set; }
 
         public int TownId { get; private set; }
 
@@ -47,7 +47,7 @@
         
         public Status Status { get; set; }
 
-        public IEnumerable<ProjectMaterials> Materials { get; set; }
+        public ICollection<Material> Materials { get; set; }
 
         //public IEnumerable<Note> Notes { get; private set; } = new List<Note>();
 
