@@ -10,18 +10,17 @@
 
 @if (!Model.Materials.Any())
 {
-<div class=" text-center">
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Oooops!</h4>
-        <p>There is no materials added to this project.</p>
-        <hr>
-        <p class="mb-0">Click button below to add some.</p>
+    <div class=" text-center">
+        <div class="alert alert-danger"  role="alert">
+            <div>
+                <h4 class="alert-heading">Oooops! No materials found.</h4>
+            </div>           
+        </div>
+        <div>
+            <a asp-controller="Materials" asp-action="Add" asp-route-id="@Model.ProjectId" class="btn btn-primary">Add materials</a>
+            <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Go Back</a>
+        </div>
     </div>
-    <div>
-        <a asp-controller="Materials" asp-action="Add" asp-route-id="@Model.ProjectId" class="btn btn-primary">Add materials</a>
-        <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-danger">Go Back</a>
-    </div>
-</div>
 }
 else
 {

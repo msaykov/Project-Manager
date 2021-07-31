@@ -10,7 +10,7 @@ using ProjectManager.Data;
 namespace ProjectManager.Data.Migrations
 {
     [DbContext(typeof(ProjectManagerDbContext))]
-    [Migration("20210722211808_InitialCreate")]
+    [Migration("20210730210333_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,21 @@ namespace ProjectManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("MaterialProject", b =>
+                {
+                    b.Property<int>("MaterialsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaterialsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("MaterialProject");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -228,13 +243,16 @@ namespace ProjectManager.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("MaterialTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(5,3)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -242,14 +260,28 @@ namespace ProjectManager.Data.Migrations
                     b.Property<int>("SapNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaterialTypeId");
+
+                    b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("ProjectManager.Data.Models.MaterialType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("Materials");
+                    b.ToTable("MaterialTypes");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.Owner", b =>
@@ -259,11 +291,18 @@ namespace ProjectManager.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -297,7 +336,10 @@ namespace ProjectManager.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectTypeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -309,42 +351,34 @@ namespace ProjectManager.Data.Migrations
                     b.Property<int>("TownId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("ProjectTypeId");
 
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TownId");
 
-                    b.HasIndex("TypeId");
-
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("ProjectManager.Data.Models.ProjectsMaterial", b =>
+            modelBuilder.Entity("ProjectManager.Data.Models.ProjectType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("MaterialId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MaterialId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectsMaterial");
+                    b.ToTable("ProjectTypes");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.Status", b =>
@@ -356,7 +390,8 @@ namespace ProjectManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -380,21 +415,19 @@ namespace ProjectManager.Data.Migrations
                     b.ToTable("Towns");
                 });
 
-            modelBuilder.Entity("ProjectManager.Data.Models.Type", b =>
+            modelBuilder.Entity("MaterialProject", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.HasOne("ProjectManager.Data.Models.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Types");
+                    b.HasOne("ProjectManager.Data.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -450,13 +483,13 @@ namespace ProjectManager.Data.Migrations
 
             modelBuilder.Entity("ProjectManager.Data.Models.Material", b =>
                 {
-                    b.HasOne("ProjectManager.Data.Models.Type", "Type")
+                    b.HasOne("ProjectManager.Data.Models.MaterialType", "MaterialType")
                         .WithMany("Materials")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("MaterialTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Type");
+                    b.Navigation("MaterialType");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.Owner", b =>
@@ -472,6 +505,11 @@ namespace ProjectManager.Data.Migrations
                     b.HasOne("ProjectManager.Data.Models.Owner", "Owner")
                         .WithMany("Projects")
                         .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProjectManager.Data.Models.ProjectType", "ProjectType")
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -487,43 +525,18 @@ namespace ProjectManager.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectManager.Data.Models.Type", "Type")
-                        .WithMany("Projects")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Owner");
+
+                    b.Navigation("ProjectType");
 
                     b.Navigation("Status");
 
                     b.Navigation("Town");
-
-                    b.Navigation("Type");
                 });
 
-            modelBuilder.Entity("ProjectManager.Data.Models.ProjectsMaterial", b =>
+            modelBuilder.Entity("ProjectManager.Data.Models.MaterialType", b =>
                 {
-                    b.HasOne("ProjectManager.Data.Models.Material", "Material")
-                        .WithMany("Projects")
-                        .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProjectManager.Data.Models.Project", "Project")
-                        .WithMany("Materials")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Material");
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("ProjectManager.Data.Models.Material", b =>
-                {
-                    b.Navigation("Projects");
+                    b.Navigation("Materials");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.Owner", b =>
@@ -531,9 +544,9 @@ namespace ProjectManager.Data.Migrations
                     b.Navigation("Projects");
                 });
 
-            modelBuilder.Entity("ProjectManager.Data.Models.Project", b =>
+            modelBuilder.Entity("ProjectManager.Data.Models.ProjectType", b =>
                 {
-                    b.Navigation("Materials");
+                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("ProjectManager.Data.Models.Status", b =>
@@ -543,13 +556,6 @@ namespace ProjectManager.Data.Migrations
 
             modelBuilder.Entity("ProjectManager.Data.Models.Town", b =>
                 {
-                    b.Navigation("Projects");
-                });
-
-            modelBuilder.Entity("ProjectManager.Data.Models.Type", b =>
-                {
-                    b.Navigation("Materials");
-
                     b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618

@@ -27,13 +27,9 @@
 
         public Town Town { get; set; }
 
-        public int OwnerId { get; private set; }
+        public int? OwnerId { get;  set; }
 
         public Owner Owner { get; set; }
-
-        //public string EmployeeId { get; private set; }
-
-        //public Employee Employee { get; set; }
 
         [Required]
         [MaxLength(ProjectDescriptionMaxLength)]

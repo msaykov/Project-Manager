@@ -1,14 +1,15 @@
 ﻿namespace ProjectManager.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
+    using System;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using ProjectManager.Data;
     using ProjectManager.Data.Models;
     using ProjectManager.Models.Projects;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
+    using ProjectManager.Infrastructure;
 
     public class ProjectsController : Controller
 
@@ -20,7 +21,12 @@
 
         [Authorize]
         public IActionResult Add() => View();
+        //{
+        //    var userId = this.User.GetId(); 
+        //    return ...
+        //}
 
+        
         //public IActionResult Add() => View(new AddProjectFormModel
         //{
         //    Statuses = this.GetProjectStatuses()
@@ -51,26 +57,21 @@
                 .FirstOrDefault(t => t.Name == project.Town);
             var projectTown = currentTown == null ? new Town { Name = project.Town } : currentTown;
 
-            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = this.User.FindFirst(ClaimTypes.Email).Value;
-            //var userPhone = this.User.FindFirst(ClaimTypes.Email).Value;
-            
-            
+            var userId = this.User.GetId();
+            //var userEmail = this.User.FindFirst(ClaimTypes.Email).Value;
+                       
 
             var currentStatus = this.data
                .Statuses
                .FirstOrDefault(s => s.Name == "New");
             var projectStatus = currentStatus == null ? new Status { Name = "New" } : currentStatus;
 
-            var currentOwner = this.data
-                .Owners
-                .FirstOrDefault(e => e.UserId == userId);
-            var projectOwner = currentOwner == null ? new Owner { UserId = userId , Name = userName } : currentOwner;
+            //var currentOwner = this.data
+            //    .Owners
+            //    .FirstOrDefault(e => e.UserId == userId);
+            //var projectOwner = currentOwner == null ? new Owner { UserId = userId , Name = userName } : currentOwner;
 
-            //var currentEmployee = this.data
-            //    .Employees
-            //    .FirstOrDefault(e => e.Name == project.Employee);
-            //var projectEmployee = currentEmployee == null ? new Employee { Name = project.Employee } : currentEmployee;
+            
 
             DateTime date;
             DateTime.TryParse(project.EndDate, out date);
@@ -83,7 +84,7 @@
                 EndDate = date,
                 Status = projectStatus,
                 Description = project.Description,
-                Owner = projectOwner,
+                Owner = null,
             };
 
             this.data.Projects.Add(projectEntity);
@@ -123,7 +124,7 @@
                     Name = p.Name,
                     Type = p.ProjectType.Name,
                     Town = p.Town.Name,
-                    //Employee = p.Employee.Name,
+                    Owner = p.Owner.Name,
                     EndDate = p.EndDate.ToString("d"),
                     Status = p.Status.Name
                 })
@@ -166,9 +167,11 @@
                 .Statuses
                 .FirstOrDefault(p => p.Id == currentProject.StatusId);
 
-            var projectOwner= this.data
+            var projectOwner = this.data
                 .Owners
                 .FirstOrDefault(p => p.Id == currentProject.OwnerId);
+
+            var ownerName = projectOwner == null ? "Unassigned" : projectOwner.Name;
 
 
             return View(new ProjectInfoViewModel
@@ -179,7 +182,7 @@
                 Status = projectStatus.Name,
                 Town = projectTown.Name,
                 Type = projectType.Name,
-                Owner = projectOwner.Name,
+                Owner = ownerName,
                 Description = currentProject.Description,
                 //Materials = currentProject.Pro
             });
@@ -239,8 +242,8 @@
                 .FirstOrDefault(t => t.Name == project.Town);
             var projectTown = currentTown == null ? new Town { Name = project.Town } : currentTown;
 
-            System.DateTime date;
-            System.DateTime.TryParse(project.EndDate, out date);
+            DateTime date;
+            DateTime.TryParse(project.EndDate, out date);
 
 
 

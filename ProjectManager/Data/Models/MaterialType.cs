@@ -11,7 +11,7 @@
              this.Materials = new List<Material>();
         }
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [Required]
         [MaxLength(TypeNameMaxLength)]

@@ -8,13 +8,27 @@ namespace ProjectManager.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "MaterialTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MaterialTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Owners",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -29,12 +43,25 @@ namespace ProjectManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,39 +82,26 @@ namespace ProjectManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Types",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Types", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Materials",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SapNumber = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(5,3)", nullable: false),
+                    MaterialTypeId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Materials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Materials_Types_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "Types",
+                        name: "FK_Materials_MaterialTypes_MaterialTypeId",
+                        column: x => x.MaterialTypeId,
+                        principalTable: "MaterialTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,9 +111,9 @@ namespace ProjectManager.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false),
+                    ProjectTypeId = table.Column<int>(type: "int", nullable: false),
                     TownId = table.Column<int>(type: "int", nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -115,6 +129,12 @@ namespace ProjectManager.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Projects_ProjectTypes_ProjectTypeId",
+                        column: x => x.ProjectTypeId,
+                        principalTable: "ProjectTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Projects_Statuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Statuses",
@@ -126,44 +146,41 @@ namespace ProjectManager.Data.Migrations
                         principalTable: "Towns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Projects_Types_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "Types",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectsMaterial",
+                name: "MaterialProject",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    MaterialId = table.Column<int>(type: "int", nullable: false)
+                    MaterialsId = table.Column<int>(type: "int", nullable: false),
+                    ProjectsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectsMaterial", x => x.Id);
+                    table.PrimaryKey("PK_MaterialProject", x => new { x.MaterialsId, x.ProjectsId });
                     table.ForeignKey(
-                        name: "FK_ProjectsMaterial_Materials_MaterialId",
-                        column: x => x.MaterialId,
+                        name: "FK_MaterialProject_Materials_MaterialsId",
+                        column: x => x.MaterialsId,
                         principalTable: "Materials",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectsMaterial_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_MaterialProject_Projects_ProjectsId",
+                        column: x => x.ProjectsId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materials_TypeId",
+                name: "IX_MaterialProject_ProjectsId",
+                table: "MaterialProject",
+                column: "ProjectsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Materials_MaterialTypeId",
                 table: "Materials",
-                column: "TypeId");
+                column: "MaterialTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Owners_UserId",
@@ -178,6 +195,11 @@ namespace ProjectManager.Data.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_ProjectTypeId",
+                table: "Projects",
+                column: "ProjectTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_StatusId",
                 table: "Projects",
                 column: "StatusId");
@@ -186,27 +208,12 @@ namespace ProjectManager.Data.Migrations
                 name: "IX_Projects_TownId",
                 table: "Projects",
                 column: "TownId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_TypeId",
-                table: "Projects",
-                column: "TypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectsMaterial_MaterialId",
-                table: "ProjectsMaterial",
-                column: "MaterialId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectsMaterial_ProjectId",
-                table: "ProjectsMaterial",
-                column: "ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProjectsMaterial");
+                name: "MaterialProject");
 
             migrationBuilder.DropTable(
                 name: "Materials");
@@ -215,16 +222,19 @@ namespace ProjectManager.Data.Migrations
                 name: "Projects");
 
             migrationBuilder.DropTable(
+                name: "MaterialTypes");
+
+            migrationBuilder.DropTable(
                 name: "Owners");
+
+            migrationBuilder.DropTable(
+                name: "ProjectTypes");
 
             migrationBuilder.DropTable(
                 name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Towns");
-
-            migrationBuilder.DropTable(
-                name: "Types");
         }
     }
 }

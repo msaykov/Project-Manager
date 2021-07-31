@@ -12,7 +12,6 @@ namespace ProjectManager.Data.Models
             this.Projects = new List<Project>();
         }
 
-        [Key]
         public int Id { get; private set; }
 
         [Required]

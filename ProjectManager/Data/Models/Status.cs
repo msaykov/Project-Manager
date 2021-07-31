@@ -11,7 +11,7 @@
             this.Projects = new List<Project>();
         }
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [Required]
         [MaxLength(StatusNameMaxLength)]

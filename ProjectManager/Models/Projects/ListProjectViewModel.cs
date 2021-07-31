@@ -10,7 +10,7 @@
 
         public string Type { get; set; }
 
-        //public string Owner { get; set; }
+        public string Owner { get; set; }
 
         public string Town { get; set; }
 

@@ -26,10 +26,13 @@
         public const int StatusNameMinLength = 3;
         public const int StatusNameMaxLength = 20;
 
-        public const int EmployeeNameMinLength = 2;
-        public const int EmployeeNameMaxLength = 30;
+        public const int OwnerNameMinLength = 2;
+        public const int OwnerNameMaxLength = 30;
 
-        public const string DateRegEx = @"(^-?\d{1,3}\.$)|(^-?\d{1,3}$)|(^-?\d{0,3}\.\d{1,2}$)";
+        public const string PhoneNumberRegex = @"^[+][3][5][9][8|9]\d{8}$";
+        public const int PhoneNumberMaxLength = 20;
+
+
         public const string NamesErrorMsg = "The {0} must be between {2} and {1} characters long.";
     }
 }
