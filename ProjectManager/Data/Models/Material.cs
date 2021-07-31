@@ -3,7 +3,7 @@ namespace ProjectManager.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using static ProjectManager.Data.DataConstants.Material;
+    using static ProjectManager.Data.DataConstants;
 
     public class Material
     {

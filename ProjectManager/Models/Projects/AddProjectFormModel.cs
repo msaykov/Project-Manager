@@ -2,7 +2,6 @@
 namespace ProjectManager.Models.Projects
 {
     using System.ComponentModel.DataAnnotations;
-    using static Data.DataConstants.Project;
     using static Data.DataConstants;
 
     public class AddProjectFormModel

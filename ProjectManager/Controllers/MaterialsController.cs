@@ -5,7 +5,6 @@
     using ProjectManager.Data;
     using ProjectManager.Data.Models;
     using ProjectManager.Models.Materials;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class MaterialsController : Controller

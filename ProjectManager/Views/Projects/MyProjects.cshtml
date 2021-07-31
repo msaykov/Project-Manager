@@ -1,0 +1,47 @@
+﻿@model List<ListProjectViewModel>
+@{
+    ViewData["Title"] = "My Projects";
+}
+
+
+<div class="text-center">
+    <h1 class="item-title">@ViewData["Title"]</h1>
+</div>
+@if (!Model.Any())
+{
+    <h2 class="text-center">No projects found</h2>
+}
+else
+{
+<table class="table table-hover">
+    <thead>
+        <tr class="clickable text-center">
+            @*<th scope="col">ID</th>*@
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Town</th>
+            @*<th scope="col">Owner</th>*@
+            <th scope="col">End Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            <tr class="clickable text-center">
+                @*asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id"*@
+                <td>@project.Name</td>
+                <td>@project.Type</td>
+                <td>@project.Town</td>
+                @*<td>@project.Owner</td>*@
+                <td>@project.EndDate</td>
+                <td>@project.Status</td>
+                <td>
+                    <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="btn btn-primary" role="button">Learn more</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

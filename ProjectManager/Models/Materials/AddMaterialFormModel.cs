@@ -2,7 +2,6 @@
 {
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;
-    using static Data.DataConstants.Material;
 
     public class AddMaterialFormModel
     {

@@ -58,6 +58,7 @@
             this.data.SaveChanges();
 
             return RedirectToAction("Details", "Projects", new { id = id });
+            //return RedirectToAction(nameof(ProjectsController.Details), new { id = id });
         }
 
 

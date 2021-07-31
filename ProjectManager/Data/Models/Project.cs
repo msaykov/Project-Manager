@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using static ProjectManager.Data.DataConstants.Project;
+    using static ProjectManager.Data.DataConstants;
 
     public class Project
     {

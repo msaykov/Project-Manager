@@ -10,6 +10,7 @@
     using ProjectManager.Data.Models;
     using ProjectManager.Models.Projects;
     using ProjectManager.Infrastructure;
+    using static Data.DataConstants;
 
     public class ProjectsController : Controller
 
@@ -26,7 +27,7 @@
         //    return ...
         //}
 
-        
+
         //public IActionResult Add() => View(new AddProjectFormModel
         //{
         //    Statuses = this.GetProjectStatuses()
@@ -59,19 +60,19 @@
 
             var userId = this.User.GetId();
             //var userEmail = this.User.FindFirst(ClaimTypes.Email).Value;
-                       
+
 
             var currentStatus = this.data
                .Statuses
-               .FirstOrDefault(s => s.Name == "New");
-            var projectStatus = currentStatus == null ? new Status { Name = "New" } : currentStatus;
+               .FirstOrDefault(s => s.Name == DefaultStatusName);
+            var projectStatus = currentStatus == null ? new Status { Name = DefaultStatusName } : currentStatus;
 
             //var currentOwner = this.data
             //    .Owners
             //    .FirstOrDefault(e => e.UserId == userId);
             //var projectOwner = currentOwner == null ? new Owner { UserId = userId , Name = userName } : currentOwner;
 
-            
+
 
             DateTime date;
             DateTime.TryParse(project.EndDate, out date);
@@ -126,7 +127,7 @@
                     Town = p.Town.Name,
                     Owner = p.Owner.Name,
                     EndDate = p.EndDate.ToString("d"),
-                    Status = p.Status.Name
+                    Status = p.Status.Name,                    
                 })
                 .ToList();
 
@@ -150,80 +151,73 @@
                 Types = projectTypes,
             });
         }
+        [Authorize]
+        public IActionResult MyProjects()
+        {
+            var userId = this.User.GetId();
+
+            return View(this.data
+                .Projects
+                .Where(p => p.Owner.UserId == userId)
+                .OrderByDescending(p => p.EndDate)
+                .Select(p => new ListProjectViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Type = p.ProjectType.Name,
+                    Town = p.Town.Name,
+                    Owner = p.Owner.Name,
+                    EndDate = p.EndDate.ToString("d"),
+                    Status = p.Status.Name,
+                })
+                .ToList());
+
+
+        }
 
         public IActionResult Details(int id)
         {
-            var currentProject = GetProjectById(id);
+            return View(this.data
+                 .Projects
+                 .Where(p => p.Id == id)
+                 .Select(p => new ProjectInfoViewModel
+                 {
+                     Id = id,
+                     Name = p.Name,
+                     Town = p.Town.Name,
+                     Type = p.ProjectType.Name,
+                     EndDate = p.EndDate.ToString("d"),
+                     Owner = p.Owner.Name == null ? "Unassigned" : p.Owner.Name,
+                     Status = p.Status.Name,
+                     Description = p.Description,
+                     Materials = p.Materials,
+                     IsOwner = p.Owner.UserId == this.User.GetId() ? true : false,
+                 })
+                 .FirstOrDefault());
 
-            var projectTown = this.data
-                .Towns
-                .FirstOrDefault(p => p.Id == currentProject.TownId);
-
-            var projectType = this.data
-                .ProjectTypes
-                .FirstOrDefault(p => p.Id == currentProject.ProjectTypeId);
-
-            var projectStatus = this.data
-                .Statuses
-                .FirstOrDefault(p => p.Id == currentProject.StatusId);
-
-            var projectOwner = this.data
-                .Owners
-                .FirstOrDefault(p => p.Id == currentProject.OwnerId);
-
-            var ownerName = projectOwner == null ? "Unassigned" : projectOwner.Name;
-
-
-            return View(new ProjectInfoViewModel
-            {
-                Id = id,
-                Name = currentProject.Name,
-                EndDate = currentProject.EndDate.ToString("d"),
-                Status = projectStatus.Name,
-                Town = projectTown.Name,
-                Type = projectType.Name,
-                Owner = ownerName,
-                Description = currentProject.Description,
-                //Materials = currentProject.Pro
-            });
         }
 
-        public IActionResult Edit(int id) 
+        public IActionResult Edit(int id)
         {
-            var currentProject = GetProjectById(id);
-
-            var projectTown = this.data
-                .Towns
-                .FirstOrDefault(p => p.Id == currentProject.TownId);
-
-            var projectType = this.data
-                .ProjectTypes
-                .FirstOrDefault(p => p.Id == currentProject.ProjectTypeId);
-
-            var projectStatus = this.data
-                .Statuses
-                .FirstOrDefault(p => p.Id == currentProject.StatusId);
-
-            var projectOwner = this.data
-                .Owners
-                .FirstOrDefault(p => p.Id == currentProject.OwnerId);
-
-
-            return View(new EditProjectViewModel
-            {
-                Id = id,
-                Name = currentProject.Name,
-                Town = projectTown.Name,
-                Type = projectType.Name,
-                Owner = projectOwner.Name,
-                EndDate = currentProject.EndDate.ToString("d"),
-                Status = projectStatus.Name,
-                Description = currentProject.Description,
-            });
+            return View(this.data
+                .Projects
+                .Where(p => p.Id == id)
+                .Select(p => new ProjectInfoViewModel
+                {
+                    Id = id,
+                    Name = p.Name,
+                    Town = p.Town.Name,
+                    Type = p.ProjectType.Name,
+                    EndDate = p.EndDate.ToString("d"),
+                    Owner = p.Owner.Name,
+                    Status = p.Status.Name,
+                    Description = p.Description,
+                })
+                .FirstOrDefault());
         }
 
         [HttpPost]
-        public IActionResult Edit(int id , EditProjectViewModel project)
+        public IActionResult Edit(int id, EditProjectViewModel project)
         {
             if (!ModelState.IsValid)
             {
@@ -231,7 +225,7 @@
             }
 
 
-            
+
             var currentType = this.data
                 .ProjectTypes
                 .FirstOrDefault(t => t.Name == project.Type);

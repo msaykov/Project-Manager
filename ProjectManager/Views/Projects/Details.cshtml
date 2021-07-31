@@ -1,7 +1,7 @@
 ﻿@model ProjectInfoViewModel
 
 @{
-    ViewData["Title"] = "Project Info";
+    ViewData["Title"] = "Project Info";    
 }
 
 
@@ -61,12 +61,11 @@
         </div>
         @if (@Model.Owner == "Unassigned")
         {
-    <div class="col-9">
-        <a asp-controller="Owners" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Assign to Me</a>
-        <a asp-controller="Projects" asp-action="All"  class="btn btn-primary">Back</a>
-    </div>
+            <div class="col-9">
+                <a asp-controller="Owners" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Assign to Me</a>
+            </div>
         }
-        else
+        @if (@Model.IsOwner == true)
         {
             <div class="col-9">
                 <a asp-controller="Materials" asp-action="All" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
@@ -74,6 +73,9 @@
                 <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
             </div>
         }
+        <div class="col-9">
+            <a asp-controller="Projects" asp-action="All" class="btn btn-primary">Back</a>
+        </div>
     </body>
 </div>
 
