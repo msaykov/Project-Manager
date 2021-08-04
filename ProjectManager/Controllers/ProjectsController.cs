@@ -191,6 +191,7 @@
                      Status = p.Status.Name,
                      Description = p.Description,
                      Materials = p.Materials,
+                     Notes = p.Notes.OrderByDescending(n => n.Id).Take(5),
                      IsOwner = p.Owner.UserId == this.User.GetId() ? true : false,
                  })
                  .FirstOrDefault());
@@ -202,7 +203,7 @@
             return View(this.data
                 .Projects
                 .Where(p => p.Id == id)
-                .Select(p => new ProjectInfoViewModel
+                .Select(p => new EditProjectViewModel
                 {
                     Id = id,
                     Name = p.Name,

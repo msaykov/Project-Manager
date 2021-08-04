@@ -26,6 +26,7 @@
         public DbSet<Owner> Owners { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Town> Towns { get; set; }
+        public DbSet<Note> Notes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -96,6 +97,13 @@
                 .Entity<Material>()
                 .HasOne(p => p.MaterialType)
                 .WithMany(t => t.Materials)
+                //.HasForeignKey(p => p.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Note>()
+                .HasOne(n => n.Project)
+                .WithMany(t => t.Notes)
                 //.HasForeignKey(p => p.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 

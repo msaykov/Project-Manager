@@ -10,6 +10,7 @@
         public Project()
         {
             this.Materials = new List<Material>();
+            this.Notes = new List<Note>();
             this.StartDate = DateTime.Now;
         }
         [Key]
@@ -45,7 +46,7 @@
 
         public ICollection<Material> Materials { get; set; }
 
-        //public IEnumerable<Note> Notes { get; private set; } = new List<Note>();
+        public ICollection<Note> Notes { get; private set; }
 
     }
 }

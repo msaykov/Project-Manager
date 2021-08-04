@@ -9,10 +9,15 @@ namespace ProjectManager.Models.Projects
         public ProjectInfoViewModel()
         {
             this.Materials = new List<Material>();
+            this.Notes = new List<Note>();
         }
 
         public string Description { get; set; }
 
         public IEnumerable<Material> Materials { get; set; } 
+
+        public IEnumerable<Note> Notes { get; set; } 
+
+
     }
 }
