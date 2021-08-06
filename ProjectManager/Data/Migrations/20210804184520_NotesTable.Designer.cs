@@ -10,7 +10,7 @@ using ProjectManager.Data;
 namespace ProjectManager.Data.Migrations
 {
     [DbContext(typeof(ProjectManagerDbContext))]
-    [Migration("20210804152622_NotesTable")]
+    [Migration("20210804184520_NotesTable")]
     partial class NotesTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -293,6 +293,9 @@ namespace ProjectManager.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreationDate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProjectId")

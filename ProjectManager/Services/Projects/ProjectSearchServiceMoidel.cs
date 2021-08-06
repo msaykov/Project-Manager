@@ -1,12 +1,11 @@
-﻿
-namespace ProjectManager.Models.Projects
+﻿namespace ProjectManager.Services.Projects
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class ProjectsSearchViewModel
+    public class ProjectSearchServiceMoidel
     {
-        public IEnumerable<ListProjectViewModel> Projects { get; set; }
+        public IEnumerable<ProjectServiceModel> Projects { get; set; }
 
         [Display(Name = "Search by Town name:")]
         public string TownName { get; set; }

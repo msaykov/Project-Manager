@@ -1,151 +1,50 @@
 ﻿namespace ProjectManager.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
-    using ProjectManager.Data;
-    using ProjectManager.Data.Models;
     using ProjectManager.Models.Projects;
     using ProjectManager.Infrastructure;
     using static Data.DataConstants;
+    using ProjectManager.Services.Projects;
 
     public class ProjectsController : Controller
 
     {
-        private readonly ProjectManagerDbContext data;
+        //private readonly ProjectManagerDbContext data;
+        private readonly IProjectService project;
 
-        public ProjectsController(ProjectManagerDbContext data)
-            => this.data = data;
+        public ProjectsController(IProjectService projectService)
+        {
+            //this.data = data;
+            this.project = projectService;
+        }
 
         [Authorize]
         public IActionResult Add() => View();
-        //{
-        //    var userId = this.User.GetId(); 
-        //    return ...
-        //}
-
-
-        //public IActionResult Add() => View(new AddProjectFormModel
-        //{
-        //    Statuses = this.GetProjectStatuses()
-        //});
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddProjectFormModel project)
+        public IActionResult Add(AddProjectFormModel model)
         {
-            //if (!this.data.Statuses.Any(s => s.Id == project.StatusId))
-            //{
-            //    this.ModelState.AddModelError(nameof(project.StatusId), "Status does not exist.");
-            //}
-
             if (!ModelState.IsValid)
             {
-                //project.Statuses = this.GetProjectStatuses();
-                return View(project);
+                return View(model);
             }
 
-            var currentType = this.data
-                .ProjectTypes
-                .FirstOrDefault(t => t.Name == project.Type);
-            var projectType = currentType == null ? new ProjectType { Name = project.Type } : currentType;
+            var projectId = this.project.Create(model.Name, model.Type, model.Town, model.EndDate, model.Description);
 
-            var currentTown = this.data
-                .Towns
-                .FirstOrDefault(t => t.Name == project.Town);
-            var projectTown = currentTown == null ? new Town { Name = project.Town } : currentTown;
-
-            var userId = this.User.GetId();
-            //var userEmail = this.User.FindFirst(ClaimTypes.Email).Value;
-
-
-            var currentStatus = this.data
-               .Statuses
-               .FirstOrDefault(s => s.Name == DefaultStatusName);
-            var projectStatus = currentStatus == null ? new Status { Name = DefaultStatusName } : currentStatus;
-
-            //var currentOwner = this.data
-            //    .Owners
-            //    .FirstOrDefault(e => e.UserId == userId);
-            //var projectOwner = currentOwner == null ? new Owner { UserId = userId , Name = userName } : currentOwner;
-
-
-
-            DateTime date;
-            DateTime.TryParse(project.EndDate, out date);
-
-            var projectEntity = new Project
-            {
-                Name = project.Name,
-                ProjectType = projectType,
-                Town = projectTown,
-                EndDate = date,
-                Status = projectStatus,
-                Description = project.Description,
-                Owner = null,
-            };
-
-            this.data.Projects.Add(projectEntity);
-            this.data.SaveChanges();
-
-            return RedirectToAction(nameof(All));
-            //return RedirectToAction("Index", "Home");
+            return RedirectToAction("Details", "Projects", new { id = projectId});
         }
 
+        [Authorize]
         public IActionResult All(string status, string townName, string type)
         {
-            var projectsQuery = this.data.Projects.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(status))
+            var projectQuery = this.project.All(status, type, townName);             
+            var projectStatuses = this.project.GetStatuses();
+            var projectTypes = this.project.GetTypes();
+            return View(new ProjectSearchServiceMoidel
             {
-                projectsQuery = projectsQuery
-                    .Where(s => s.Status.Name == status);
-            }
-
-            if (!string.IsNullOrWhiteSpace(type))
-            {
-                projectsQuery = projectsQuery
-                    .Where(t => t.ProjectType.Name == type);
-            }
-
-            if (!string.IsNullOrWhiteSpace(townName))
-            {
-                projectsQuery = projectsQuery
-                    .Where(tn => tn.Town.Name.ToLower().Contains(townName.ToLower()));
-            }
-
-            var allProjects = projectsQuery
-                .OrderByDescending(p => p.Id)
-                .Select(p => new ListProjectViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Type = p.ProjectType.Name,
-                    Town = p.Town.Name,
-                    Owner = p.Owner.Name,
-                    EndDate = p.EndDate.ToString("d"),
-                    Status = p.Status.Name,                    
-                })
-                .ToList();
-
-            var projectStatuses = this.data
-                .Projects
-                .Select(s => s.Status.Name)
-                .Distinct()
-                .ToList();
-
-            var projectTypes = this.data
-               .Projects
-               .Select(s => s.ProjectType.Name)
-               .Distinct()
-               .ToList();
-
-            return View(new ProjectsSearchViewModel
-            {
-                Projects = allProjects,
+                Projects = projectQuery,
                 TownName = townName,
                 Statuses = projectStatuses,
                 Types = projectTypes,
@@ -155,124 +54,45 @@
         public IActionResult MyProjects()
         {
             var userId = this.User.GetId();
-
-            return View(this.data
-                .Projects
-                .Where(p => p.Owner.UserId == userId)
-                .OrderByDescending(p => p.EndDate)
-                .Select(p => new ListProjectViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Type = p.ProjectType.Name,
-                    Town = p.Town.Name,
-                    Owner = p.Owner.Name,
-                    EndDate = p.EndDate.ToString("d"),
-                    Status = p.Status.Name,
-                })
-                .ToList());
-
-
+            return View(project.MyProjects(userId));
         }
 
+        [Authorize]
         public IActionResult Details(int id)
         {
-            return View(this.data
-                 .Projects
-                 .Where(p => p.Id == id)
-                 .Select(p => new ProjectInfoViewModel
-                 {
-                     Id = id,
-                     Name = p.Name,
-                     Town = p.Town.Name,
-                     Type = p.ProjectType.Name,
-                     EndDate = p.EndDate.ToString("d"),
-                     Owner = p.Owner.Name == null ? "Unassigned" : p.Owner.Name,
-                     Status = p.Status.Name,
-                     Description = p.Description,
-                     Materials = p.Materials,
-                     Notes = p.Notes.OrderByDescending(n => n.Id).Take(5),
-                     IsOwner = p.Owner.UserId == this.User.GetId() ? true : false,
-                 })
-                 .FirstOrDefault());
-
+            var userId = this.User.GetId();
+            return View(project.Details(id, userId));
         }
 
+        [Authorize]
+        public IActionResult Reports()
+            => View();
+
+        //[HttpPost]
+        //[Authorize]
+        //public IActionResult Reports(int id){}
+
+        [Authorize]
         public IActionResult Edit(int id)
         {
-            return View(this.data
-                .Projects
-                .Where(p => p.Id == id)
-                .Select(p => new EditProjectViewModel
-                {
-                    Id = id,
-                    Name = p.Name,
-                    Town = p.Town.Name,
-                    Type = p.ProjectType.Name,
-                    EndDate = p.EndDate.ToString("d"),
-                    Owner = p.Owner.Name,
-                    Status = p.Status.Name,
-                    Description = p.Description,
-                })
-                .FirstOrDefault());
+            return View(project.Edit(id));
         }
 
+
+
         [HttpPost]
-        public IActionResult Edit(int id, EditProjectViewModel project)
+        [Authorize]
+        public IActionResult Edit(int id, EditProjectServiceModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(project);
+                return View(model);
             }
 
-
-
-            var currentType = this.data
-                .ProjectTypes
-                .FirstOrDefault(t => t.Name == project.Type);
-            var projectType = currentType == null ? new ProjectType { Name = project.Type } : currentType;
-
-            var currentTown = this.data
-                .Towns
-                .FirstOrDefault(t => t.Name == project.Town);
-            var projectTown = currentTown == null ? new Town { Name = project.Town } : currentTown;
-
-            DateTime date;
-            DateTime.TryParse(project.EndDate, out date);
-
-
-
-
-            var currentProject = GetProjectById(id);
-
-            currentProject.Name = project.Name;
-            currentProject.Town = projectTown;
-            currentProject.ProjectType = projectType;
-            //currentProject.Owner.Name = project.Owner;
-            currentProject.EndDate = date;
-            //currentProject.Status.Name = project.Status;
-            currentProject.Description = project.Description;
-
-            this.data.SaveChanges();
-
-            return RedirectToAction(nameof(All));
+            project.Edit(id, model.Name, model.Type, model.Town, model.EndDate, model.Description);
+            
+            return RedirectToAction("Details", "Projects", new { id = id });
         }
-
-
-
-        private IEnumerable<ProjectStatusViewModel> GetProjectStatuses()
-            => this.data
-            .Statuses
-            .Select(s => new ProjectStatusViewModel
-            {
-                Id = s.Id,
-                Name = s.Name
-            })
-            .ToList();
-
-        private Project GetProjectById(int id)
-            => this.data
-            .Projects
-            .FirstOrDefault(p => p.Id == id);
+                        
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace ProjectManager.Models.Projects
-{
-    using static Data.DataConstants;
+﻿namespace ProjectManager.Services.Projects
+{    
 
-    public class ListProjectViewModel
+    public class ProjectServiceModel
     {
         public int Id { get; set; }
 

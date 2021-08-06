@@ -1,4 +1,4 @@
-﻿@model ProjectInfoViewModel
+﻿@model ProjectInfoServiceModel
 
 @{
     ViewData["Title"] = "Project Info";
@@ -18,89 +18,90 @@
         </div>
     </header>
 </div>
-<div>
-    <body>
-        <div class="row">
-            <ul class="col-3">
-                <li class="card row-3">
-                    <div>
-                        <strong>Location:</strong>
-                        <span>@Model.Town</span>
-                    </div>
-                </li>
-                <li class="card row-3">
-                    <div>
-                        <strong>Type:</strong>
-                        <span>@Model.Type</span>
-                    </div>
-                </li>
-                <li class="card row-3">
-                    <div>
-                        <strong>End Date:</strong>
-                        <span>@Model.EndDate</span>
-                    </div>
-                </li>
-                <li class="card row-3">
-                    <div>
-                        <strong>Status:</strong>
-                        <span>@Model.Status</span>
-                    </div>
-                </li>
-                <li class="card row-3">
-                    <div>
-                        <strong>Owner:</strong>
-                        <span>@Model.Owner</span>
-                    </div>
-                </li>
-            </ul>
-            <div class="col-6">
-                <h3>Description:</h3>
-                <p>@Model.Description</p>
-                @*<a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>*@
-            </div>
-            @if (Model.IsOwner == true)
-            {
-                <div class="col-3">
-                    <h3>Notes:</h3>
-                    @if (!@Model.Notes.Any())
-                    {
-                        <h4>No Notes</h4>
-                    }
-                    else
-                    {
-                        @foreach (var note in @Model.Notes)
-                        {
-                            <p>@note.Content</p>
-                        }
-                    }
-                    <div>
-                        <a asp-controller="Notes" asp-action="Add" asp-route-id="@Model.Id" class="btn btn-primary">Add Note</a>
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="row">
-            @if (@Model.Owner == "Unassigned")
-            {
+<body>
+    <div class="row">
+        <ul class="col-3">
+            <li class="card row-3">
                 <div>
-                    <a asp-controller="Owners" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Assign to Me</a>
+                    <strong>Location:</strong>
+                    <span>@Model.Town</span>
                 </div>
-            }
-            @if (@Model.IsOwner == true)
-            {
+            </li>
+            <li class="card row-3">
                 <div>
-                    <a asp-controller="Materials" asp-action="All" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
-                    <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-                    <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
+                    <strong>Type:</strong>
+                    <span>@Model.Type</span>
                 </div>
-            }
-            <div class="ml-1">
-                <a asp-controller="Projects" asp-action="All" class="btn btn-primary">Back</a>
-            </div>
+            </li>
+            <li class="card row-3">
+                <div>
+                    <strong>End Date:</strong>
+                    <span>@Model.EndDate</span>
+                </div>
+            </li>
+            <li class="card row-3">
+                <div>
+                    <strong>Status:</strong>
+                    <span>@Model.Status</span>
+                </div>
+            </li>
+            <li class="card row-3">
+                <div>
+                    <strong>Owner:</strong>
+                    <span>@Model.Owner</span>
+                </div>
+            </li>
+        </ul>
+        <div class="col-5">
+            <h3>Description:</h3>
+            <p>@Model.Description</p>
+            @*<a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>*@
         </div>
+        @if (Model.IsOwner == true)
+        {
+            <div class="col-4">
+                <h3>Notes:</h3>
+                @if (!@Model.Notes.Any())
+                {
+                    <h4>No Notes</h4>
+                }
+                else
+                {
+                    @foreach (var note in @Model.Notes)
+                    {
+                        <div class="card-body">
+                            <small class="card-title"><b><i>@note.CreationDate</i></b></small>
+                            <p class="card-text">@note.Content</p>
+                        </div>
+                    }
+                }
+                <div>
+                    <a asp-controller="Notes" asp-action="Add" asp-route-id="@Model.Id" class="btn btn-primary">Add Note</a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="d-flex justify-content-start">
+        @if (@Model.Owner == "Unassigned")
+        {
+            <div>
+                <a asp-controller="Owners" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Assign to Me</a>
+            </div>
+        }
+        @if (@Model.IsOwner == true)
+        {
+            <div>
+                <a asp-controller="Materials" asp-action="All" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
+                <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
+            </div>
+        }
+        <div class="ml-1">
+            <a asp-controller="Projects" asp-action="All" class="btn btn-primary">Back</a>
+        </div>
+    </div>
 
-    </body>
-</div>
+</body>
 
 
 @*<div class="row">

@@ -1,14 +1,34 @@
 ﻿namespace ProjectManager.Services.Projects
 {
-    using System;
+    using ProjectManager.Data.Models;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public interface IProjectService
     {
-        public ICollection<string> GetStatuses();
+        ICollection<ProjectServiceModel> All(string status, string type, string townName);
 
-        public ICollection<string> GetTypes();
+        ICollection<ProjectServiceModel> MyProjects(string userId);
+
+        ProjectInfoServiceModel Details(int projectId , string userId);
+
+        EditProjectServiceModel Edit(int projectId);
+
+        int Create(string name, string type, string town, string date, string description);
+
+        void Edit(int projectId, string name, string type, string town, string date, string description);
+        
+        Project GetProjectById(int id);
+
+        ProjectType GetProjectType(string name);
+
+        Town GetProjectTown(string name);
+
+        Status GetProjectStatus(string name);
+
+        ICollection<string> GetStatuses();
+
+        ICollection<string> GetTypes();
+
+
     }
 }

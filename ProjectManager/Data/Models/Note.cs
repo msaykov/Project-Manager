@@ -16,5 +16,7 @@
 
         [Required]
         public string Content { get; set; }
+
+        public string CreationDate { get; set; }
     }
 }

@@ -293,6 +293,9 @@ namespace ProjectManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreationDate")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 

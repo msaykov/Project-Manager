@@ -5,6 +5,7 @@
     using ProjectManager.Data;
     using ProjectManager.Data.Models;
     using ProjectManager.Models.Notes;
+    using System;
     using System.Linq;
 
     public class NotesController : Controller
@@ -30,14 +31,10 @@
                 return View(note);
             }
 
-            //var curentStatuses = this.data
-            //    .Statuses
-            //    .Select(s => s.Name)
-            //    .ToList();
-
             var noteEntity = new Note
             {
-                Content = note.Content,                
+                Content = note.Content,  
+                CreationDate = DateTime.UtcNow.ToString("dd.MM.yyyy - hh:mm:ss"),
             };
 
 
