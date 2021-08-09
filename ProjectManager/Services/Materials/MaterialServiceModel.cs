@@ -1,6 +1,6 @@
-﻿namespace ProjectManager.Models.Materials
+﻿namespace ProjectManager.Services.Materials
 {
-    public class MaterialInfoViewModel
+    public class MaterialServiceModel
     {
         public string Name { get; set; }
 

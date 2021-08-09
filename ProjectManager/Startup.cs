@@ -9,6 +9,9 @@ namespace ProjectManager
     using Microsoft.Extensions.Hosting;
     using ProjectManager.Data;
     using ProjectManager.Infrastructure;
+    using ProjectManager.Services.Materials;
+    using ProjectManager.Services.Notes;
+    using ProjectManager.Services.Owners;
     using ProjectManager.Services.Projects;
 
     public class Startup
@@ -40,6 +43,9 @@ namespace ProjectManager
 
             services.AddControllersWithViews();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IMaterialService, MaterialService>();
+            services.AddTransient<INoteService, NoteService>();
+            services.AddTransient<IOwnerService, OwnerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,82 +5,49 @@
     using ProjectManager.Data;
     using ProjectManager.Data.Models;
     using ProjectManager.Models.Materials;
+    using ProjectManager.Services.Materials;
     using System.Linq;
 
     public class MaterialsController : Controller
     {
-        private readonly ProjectManagerDbContext data;
+        //private readonly ProjectManagerDbContext data;
+        private readonly IMaterialService material;
 
-        public MaterialsController(ProjectManagerDbContext data)
-            => this.data = data;
+        public MaterialsController(IMaterialService material)
+        {
+            this.material = material;
+            //this.data = data;
+        }
 
         [Authorize]
         public IActionResult Add() => View();
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddMaterialFormModel material, int id) 
+        public IActionResult Add(AddMaterialFormModel model, int id) 
         {
-            var currentProject = GetProjectById(id);
-
             if (!ModelState.IsValid)
             {
-                return View(material);
+                return View(model);
             }
 
-            var currentType = this.data
-                .MaterialTypes
-                .FirstOrDefault(t => t.Name == material.Type);
-            var materialType = currentType == null ? new MaterialType { Name = material.Type } : currentType;
+            this.material.Create(id, model.Name, model.Type, model.SapNumber, model.Price, model.Quantity);
 
-            //var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //var userName = this.User.FindFirst(ClaimTypes.Email).Value;
-            //var userPhone = this.User.FindFirst(ClaimTypes.Email).Value;
-
-           
-            var materialEntity = new Material
-            {
-                Name = material.Name,
-                MaterialType = materialType,
-                SapNumber = material.SapNumber,
-                Price = material.Price,
-                Quantity = material.Quantity,
-            };
-
-            currentProject.Materials.Add(materialEntity);
-            this.data.SaveChanges();
-
-
-            return RedirectToAction(nameof(All), new { id = id});
-            //return RedirectToAction("Details", "Projects", new { id = id });
+            return RedirectToAction(nameof(All), new { id = id });
         }
 
         public IActionResult All(int id)
         {
-            
-            var allMaterials = this.data
-                .Materials
-                .Where(m => m.Projects.Any(p => p.Id == id))
-                .Select(m => new MaterialInfoViewModel
-                {
-                    Name = m.Name,
-                    Type = m.MaterialType.Name,
-                    SapNumber = m.SapNumber,
-                    Price = m.Price,
-                    Quantity = m.Quantity
-                })
-                .ToList();
 
-            return View(new ListMaterialViewModel 
+            var allMaterials = material.All(id);
+
+            return View(new AllMaterialsServiceModel 
             {
                 ProjectId = id,
                 Materials = allMaterials,
             });
         }
 
-        private Project GetProjectById(int id)
-            => this.data
-            .Projects
-            .FirstOrDefault(p => p.Id == id);
+        
     }
 }

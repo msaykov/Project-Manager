@@ -3,18 +3,18 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using ProjectManager.Data;
-    using ProjectManager.Data.Models;
     using ProjectManager.Models.Notes;
-    using System;
-    using System.Linq;
+    using ProjectManager.Services.Notes;
 
     public class NotesController : Controller
     {
-        private readonly ProjectManagerDbContext data;
+        //private readonly ProjectManagerDbContext data;
+        private readonly INoteService note;
+        
 
-        public NotesController(ProjectManagerDbContext data)
+        public NotesController(INoteService note)
         {
-            this.data = data;
+            this.note = note;
         }
 
         [Authorize]
@@ -25,29 +25,16 @@
         [Authorize]
         public IActionResult Add(AddNoteFormModel note , int id)
         {
-            var currentProject = GetProjectById(id);
             if (!ModelState.IsValid)
             {
                 return View(note);
             }
 
-            var noteEntity = new Note
-            {
-                Content = note.Content,  
-                CreationDate = DateTime.UtcNow.ToString("dd.MM.yyyy - hh:mm:ss"),
-            };
-
-
-
-            currentProject.Notes.Add(noteEntity);
-            this.data.SaveChanges();
+            this.note.Create(id, note.Content);
 
             return RedirectToAction("Details", "Projects", new { id = id });
         }
 
-        private Project GetProjectById(int id)
-           => this.data
-           .Projects
-           .FirstOrDefault(p => p.Id == id);
+        
     }
 }
