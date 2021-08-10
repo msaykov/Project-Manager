@@ -16,5 +16,7 @@
         public IEnumerable<Material> Materials { get; set; }
 
         public IEnumerable<Note> Notes { get; set; }
+
+        //public IEnumerable<string> Statuses { get; set; }
     }
 }

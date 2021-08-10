@@ -15,7 +15,7 @@
 
         int Create(string name, string type, string town, string date, string description);
 
-        void Edit(int projectId, string name, string type, string town, string date, string description);
+        void Edit(int projectId, string name, string type, string town, string date, string description, int statusId);
         
         Project GetProjectById(int id);
 

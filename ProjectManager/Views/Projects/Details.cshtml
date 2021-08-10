@@ -90,11 +90,11 @@
         }
         @if (@Model.IsOwner == true)
         {
-            <div>
-                <a asp-controller="Materials" asp-action="All" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
-                <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-                <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
-            </div>
+    <div>
+        <a asp-controller="Materials" asp-action="All" asp-route-id="@Model.Id" class="btn btn-primary">Materials</a>
+        <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>        
+    </div>
         }
         <div class="ml-1">
             <a asp-controller="Projects" asp-action="All" class="btn btn-primary">Back</a>

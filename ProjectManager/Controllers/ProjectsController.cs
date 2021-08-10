@@ -6,6 +6,7 @@
     using ProjectManager.Infrastructure;
     using static Data.DataConstants;
     using ProjectManager.Services.Projects;
+    using System;
 
     public class ProjectsController : Controller
 
@@ -30,6 +31,7 @@
             {
                 return View(model);
             }
+            
 
             var projectId = this.project.Create(model.Name, model.Type, model.Town, model.EndDate, model.Description);
 
@@ -89,7 +91,7 @@
                 return View(model);
             }
 
-            project.Edit(id, model.Name, model.Type, model.Town, model.EndDate, model.Description);
+            project.Edit(id, model.Name, model.Type, model.Town, model.EndDate, model.Description, model.StatusId);
             
             return RedirectToAction("Details", "Projects", new { id = id });
         }

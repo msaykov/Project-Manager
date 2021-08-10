@@ -94,6 +94,15 @@
 
         public EditProjectServiceModel Edit(int projectId)
         {
+            var statuses = this.data
+                .Statuses
+                .Select(s => new StatusesServiceModel 
+                { 
+                    Id = s.Id,
+                    Name = s.Name,                    
+                })
+                .ToList();
+
             return this.data
                 .Projects
                 .Where(p => p.Id == projectId)
@@ -107,6 +116,8 @@
                     Owner = p.Owner.Name,
                     Status = p.Status.Name,
                     Description = p.Description,
+                    StatusId = p.StatusId,
+                    Statuses = statuses,
                 })
                 .FirstOrDefault();
         }
@@ -115,6 +126,11 @@
             => this.data
                 .Statuses
                 .FirstOrDefault(t => t.Name == name);
+
+        public Status GetProjectStatusById(int id)
+            => this.data
+                .Statuses
+                .FirstOrDefault(t => t.Id == id);
 
         public Town GetProjectTown(string name)
             => this.data
@@ -156,9 +172,10 @@
             var currentStatus = this.GetProjectStatus(DefaultStatusName);
             var projectStatus = currentStatus == null ? new Status { Name = DefaultStatusName } : currentStatus;
 
-
             DateTime date;
             DateTime.TryParse(endDate, out date);
+
+            
 
             var projectEntity = new Project
             {
@@ -177,13 +194,15 @@
             return projectEntity.Id; 
         }
 
-        public void Edit(int projectid, string name, string type, string town, string endDate, string description)
+        public void Edit(int projectid, string name, string type, string town, string endDate, string description, int statusId)
         {
             var currentType = this.GetProjectType(type);
             var projectType = currentType == null ? new ProjectType { Name = type } : currentType;
 
             var currentTown = this.GetProjectTown(town);
             var projectTown = currentTown == null ? new Town { Name = town } : currentTown;
+
+            var currentStatus = GetProjectStatusById(statusId);
 
 
             DateTime date;
@@ -197,6 +216,8 @@
             projectEntity.ProjectType = projectType;
             projectEntity.EndDate = date;
             projectEntity.Description = description;
+            projectEntity.Status = currentStatus;
+            
 
             this.data.SaveChanges();
         }

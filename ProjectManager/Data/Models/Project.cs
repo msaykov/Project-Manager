@@ -48,5 +48,7 @@
 
         public ICollection<Note> Notes { get; private set; }
 
+        public bool IsClosed { get; set; } = false;
+
     }
 }
