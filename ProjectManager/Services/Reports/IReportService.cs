@@ -1,11 +1,10 @@
 ﻿namespace ProjectManager.Services.Reports
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public interface IReportService
     {
+        ICollection<ReportCostServiceModel> ByCost();
+        ICollection<ReportDateServiceModel> ByEndDate();
     }
 }

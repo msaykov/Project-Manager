@@ -1,0 +1,34 @@
+﻿@model ICollection<ReportDateServiceModel>
+
+    @{
+    ViewData["Title"] = "Days Remaining";
+    }
+    <div class="text-center">
+        <h1 class="item-title">@ViewData["Title"]</h1>
+    </div>
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <tr class="clickable text-center">
+                    <th scope="col">Name</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Days Remaining</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                <tr class="clickable text-center">
+                    <td>@project.ProjectName</td>
+                    <td>@project.Owner</td>
+                    <td>@project.EndDate</td>
+                    <td>@project.RemainingDays.Days</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-center">
+        <a asp-controller="Reports" asp-action="All" class="btn btn-primary">Back</a>
+    </div>

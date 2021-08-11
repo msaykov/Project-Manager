@@ -1,12 +1,10 @@
 ﻿namespace ProjectManager.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
     using ProjectManager.Services.Reports;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
-    public class ReportsController
+    public class ReportsController : Controller
     {
         private readonly IReportService report;
 
@@ -15,5 +13,19 @@
         {
             this.report = report;
         }
+
+        [Authorize]
+        public IActionResult All()
+            => View();
+
+        [Authorize]
+        public IActionResult ByCost()
+            => View(report.ByCost());
+
+        [Authorize]
+        public IActionResult ByEndDate()
+            => View(report.ByEndDate());
+
+
     }
 }

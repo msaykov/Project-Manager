@@ -66,21 +66,19 @@
             return View(project.Details(id, userId));
         }
 
-        [Authorize]
-        public IActionResult Reports()
-            => View();
+        //[Authorize]
+        //public IActionResult Reports()
+        //    => View();
 
         //[HttpPost]
         //[Authorize]
-        //public IActionResult Reports(int id){}
+        //public IActionResult Reports(){}
 
         [Authorize]
         public IActionResult Edit(int id)
         {
             return View(project.Edit(id));
         }
-
-
 
         [HttpPost]
         [Authorize]
@@ -95,6 +93,10 @@
             
             return RedirectToAction("Details", "Projects", new { id = id });
         }
+
+        
+
+
                         
     }
 }

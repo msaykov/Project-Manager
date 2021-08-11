@@ -203,7 +203,7 @@
             var projectTown = currentTown == null ? new Town { Name = town } : currentTown;
 
             var currentStatus = GetProjectStatusById(statusId);
-
+            var isClosed = currentStatus.Name == "Done" ? true : false;
 
             DateTime date;
             DateTime.TryParse(endDate, out date);
@@ -217,7 +217,9 @@
             projectEntity.EndDate = date;
             projectEntity.Description = description;
             projectEntity.Status = currentStatus;
-            
+            projectEntity.IsClosed = isClosed;
+
+
 
             this.data.SaveChanges();
         }
