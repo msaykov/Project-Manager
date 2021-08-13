@@ -1,5 +1,7 @@
 ﻿namespace ProjectManager.Services.Materials
 {
+    using System.Collections.Generic;
+
     public class MaterialServiceModel
     {
         public string Name { get; set; }

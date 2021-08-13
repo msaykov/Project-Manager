@@ -27,7 +27,7 @@ namespace ProjectManager.Models.Projects
 
         [Display(Name = "End Date")]
         [Required]
-        //[RegularExpression(DateRegEx)]
+        [DataType(DataType.Date)]        
         public string EndDate { get; set; }
 
         //[Display(Name = "Project Status")]

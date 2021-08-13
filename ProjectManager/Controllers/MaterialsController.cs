@@ -20,18 +20,29 @@
         }
 
         [Authorize]
-        public IActionResult Add() => View();
+        public IActionResult Add()
+        {
+            var types = material.GetMaterialTypes();
+            var materials = material.GetMaterialNames();
+            return View(new AddMaterialServiceModel 
+            {
+                Materials = materials,
+                Types = types,
+            });
+        }
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddMaterialFormModel model, int id) 
+        public IActionResult Add(AddMaterialServiceModel model, int id) 
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            this.material.Create(id, model.Name, model.Type, model.SapNumber, model.Price, model.Quantity);
+
+
+            this.material.Create(id, model.MaterialId, model.MaterialTypeId, model.Quantity);
 
             return RedirectToAction(nameof(All), new { id = id });
         }

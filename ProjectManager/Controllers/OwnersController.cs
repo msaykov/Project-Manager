@@ -2,13 +2,9 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using ProjectManager.Data;
-    using ProjectManager.Data.Models;
     using ProjectManager.Infrastructure;
     using ProjectManager.Models.Owners;
     using ProjectManager.Services.Owners;
-    using System.Linq;
-    using System.Security.Claims;
 
     public class OwnersController : Controller
     {
