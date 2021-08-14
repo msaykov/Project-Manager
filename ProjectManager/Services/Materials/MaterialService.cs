@@ -47,30 +47,41 @@
         //}
 
 
-        public void Create(int projectId, int MaterialId, int MaterialTypeId, int quantity)
+        public void Add(int projectId, int MaterialId, /*int MaterialTypeId,*/ int quantity)
         {
             var currentProject = GetProjectById(projectId);
+            var projectMaterials = this.data
+                .Materials
+                .Where(m => m.Projects.Any(p => p.Id == projectId))
+                .ToList();
 
             var currentMaterial = this.data
                 .Materials
                 .Where(m => m.Id == MaterialId)
                 .FirstOrDefault();
 
-            var materialTypeEntity = this.data
-                .MaterialTypes
-                .Where(mt => mt.Id == MaterialTypeId)
-                .FirstOrDefault();
+            currentMaterial.Quantity += quantity;
 
-            var materialEntity = new Material
+            //var materialTypeEntity = this.data
+            //    .MaterialTypes
+            //    .Where(mt => mt.Id == MaterialTypeId)
+            //    .FirstOrDefault();
+
+
+            //var materialEntity = new Material
+            //{
+            //    Name = currentMaterial.Name,
+            //    MaterialType = materialTypeEntity,
+            //    SapNumber = currentMaterial.SapNumber,
+            //    Price = currentMaterial.Price,
+            //    Quantity = quantity,
+            //};
+
+            if (!projectMaterials.Any(m => m.Id == MaterialId))
             {
-                Name = currentMaterial.Name,
-                MaterialType = materialTypeEntity,
-                SapNumber = currentMaterial.SapNumber,
-                Price = currentMaterial.Price,
-                Quantity = quantity,
-            };
-
-            currentProject.Materials.Add(materialEntity);
+                //projectMaterials.Add(currentMaterial);
+                currentProject.Materials.Add(currentMaterial);
+            }            
             this.data.SaveChanges();
         }
 

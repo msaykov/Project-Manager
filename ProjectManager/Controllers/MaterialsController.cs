@@ -27,7 +27,7 @@
             return View(new AddMaterialServiceModel 
             {
                 Materials = materials,
-                Types = types,
+                //Types = types,
             });
         }
 
@@ -42,7 +42,7 @@
 
 
 
-            this.material.Create(id, model.MaterialId, model.MaterialTypeId, model.Quantity);
+            this.material.Add(id, model.MaterialId, /*model.MaterialTypeId,*/ model.Quantity);
 
             return RedirectToAction(nameof(All), new { id = id });
         }

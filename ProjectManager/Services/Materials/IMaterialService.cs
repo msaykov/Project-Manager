@@ -7,7 +7,7 @@
     {
         //void Create(int projectId, string name, string type, int sapNumber, decimal price, int quantity);
 
-        void Create(int projectId, int MaterialId, int MaterialTypeId, int quantity);
+        void Add(int projectId, int MaterialId, /*int MaterialTypeId,*/ int quantity);
 
         ICollection<MaterialServiceModel> All(int id);
 
