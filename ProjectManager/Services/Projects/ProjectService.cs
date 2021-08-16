@@ -161,7 +161,7 @@
                 .Projects
                 .FirstOrDefault(p => p.Id == id);
 
-        public int Create(string name, string type, string town, string endDate, string description)
+        public int Create(string name, string type, string town, DateTime endDate, string description)
         {
             var currentType = this.GetProjectType(type);
             var projectType = currentType == null ? new ProjectType { Name = type } : currentType;
@@ -172,17 +172,15 @@
             var currentStatus = this.GetProjectStatus(DefaultStatusName);
             var projectStatus = currentStatus == null ? new Status { Name = DefaultStatusName } : currentStatus;
 
-            DateTime date;
-            DateTime.TryParse(endDate, out date);
-
-            
+            //DateTime date;
+            //DateTime.TryParse(endDate, out date);            
 
             var projectEntity = new Project
             {
                 Name = name,
                 ProjectType = projectType,
                 Town = projectTown,
-                EndDate = date,
+                EndDate = endDate,
                 Status = projectStatus,
                 Description = description,
                 Owner = null,
@@ -218,8 +216,6 @@
             projectEntity.Description = description;
             projectEntity.Status = currentStatus;
             projectEntity.IsClosed = isClosed;
-
-
 
             this.data.SaveChanges();
         }

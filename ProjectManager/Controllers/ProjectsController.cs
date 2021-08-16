@@ -27,13 +27,23 @@
         [Authorize]
         public IActionResult Add(AddProjectFormModel model)
         {
+            DateTime date;
+            DateTime.TryParse(model.EndDate, out date);
+
+            if (date.Year < DateTime.UtcNow.Year
+                || (date.Year == DateTime.UtcNow.Year && date.DayOfYear <= DateTime.UtcNow.DayOfYear))
+            {
+                this.ModelState.AddModelError(nameof(model.EndDate), "Date is not valid.");
+            }
+
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
             
 
-            var projectId = this.project.Create(model.Name, model.Type, model.Town, model.EndDate, model.Description);
+            var projectId = this.project.Create(model.Name, model.Type, model.Town, date, /*model.EndDate,*/ model.Description);
 
             return RedirectToAction("Details", "Projects", new { id = projectId});
         }
@@ -84,9 +94,18 @@
         [Authorize]
         public IActionResult Edit(int id, EditProjectServiceModel model)
         {
+            DateTime date;
+            DateTime.TryParse(model.EndDate, out date);
+
+            if (date.Year < DateTime.UtcNow.Year 
+                || (date.Year == DateTime.UtcNow.Year && date.DayOfYear <= DateTime.UtcNow.DayOfYear))
+            {
+                this.ModelState.AddModelError(nameof(model.EndDate), "Date is not valid.");
+            }
+
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(project.Edit(id));
             }
 
             project.Edit(id, model.Name, model.Type, model.Town, model.EndDate, model.Description, model.StatusId);

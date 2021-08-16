@@ -1,6 +1,7 @@
 ﻿namespace ProjectManager.Services.Projects
 {
     using ProjectManager.Data.Models;
+    using System;
     using System.Collections.Generic;
 
     public interface IProjectService
@@ -13,7 +14,7 @@
 
         EditProjectServiceModel Edit(int projectId);
 
-        int Create(string name, string type, string town, string date, string description);
+        int Create(string name, string type, string town, DateTime date, string description);
 
         void Edit(int projectId, string name, string type, string town, string date, string description, int statusId);
         

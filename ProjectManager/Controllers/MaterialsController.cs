@@ -10,19 +10,16 @@
 
     public class MaterialsController : Controller
     {
-        //private readonly ProjectManagerDbContext data;
         private readonly IMaterialService material;
 
         public MaterialsController(IMaterialService material)
         {
             this.material = material;
-            //this.data = data;
         }
 
         [Authorize]
         public IActionResult Add()
         {
-            var types = material.GetMaterialTypes();
             var materials = material.GetMaterialNames();
             return View(new AddMaterialServiceModel 
             {
