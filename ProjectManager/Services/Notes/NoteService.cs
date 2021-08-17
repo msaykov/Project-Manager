@@ -3,6 +3,7 @@
     using ProjectManager.Data;
     using ProjectManager.Data.Models;
     using System;
+    using System.Globalization;
     using System.Linq;
 
     public class NoteService : INoteService
@@ -19,7 +20,7 @@
             var noteEntity = new Note
             {
                Content = content,
-               CreationDate = DateTime.UtcNow.ToString("dd.MM.yyyy - hh:mm:ss"),
+               CreationDate = DateTime.Now.ToString("dd.MM.yyyy - HH:mm:ss"),
             };
 
             currentProject.Notes.Add(noteEntity);

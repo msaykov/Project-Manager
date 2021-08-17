@@ -30,8 +30,8 @@
             DateTime date;
             DateTime.TryParse(model.EndDate, out date);
 
-            if (date.Year < DateTime.UtcNow.Year
-                || (date.Year == DateTime.UtcNow.Year && date.DayOfYear <= DateTime.UtcNow.DayOfYear))
+            if (date.Year < DateTime.Now.Year
+                || (date.Year == DateTime.Now.Year && date.DayOfYear <= DateTime.Now.DayOfYear))
             {
                 this.ModelState.AddModelError(nameof(model.EndDate), "Date is not valid.");
             }
@@ -97,8 +97,8 @@
             DateTime date;
             DateTime.TryParse(model.EndDate, out date);
 
-            if (date.Year < DateTime.UtcNow.Year 
-                || (date.Year == DateTime.UtcNow.Year && date.DayOfYear <= DateTime.UtcNow.DayOfYear))
+            if (date.Year < DateTime.Now.Year 
+                || (date.Year == DateTime.Now.Year && date.DayOfYear <= DateTime.Now.DayOfYear))
             {
                 this.ModelState.AddModelError(nameof(model.EndDate), "Date is not valid.");
             }
@@ -113,6 +113,19 @@
             return RedirectToAction("Details", "Projects", new { id = id });
         }
 
+        //[Authorize]
+        //public IActionResult Close()
+        //{
+        //    return View();
+        //}
+
+        [Authorize]
+        public IActionResult Close(int id)
+        {
+            project.Close(id);
+
+            return RedirectToAction(nameof(All));
+        }
         
 
 

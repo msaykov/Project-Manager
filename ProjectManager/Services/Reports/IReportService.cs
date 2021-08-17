@@ -6,5 +6,6 @@
     {
         ICollection<ReportCostServiceModel> ByCost();
         ICollection<ReportDateServiceModel> ByEndDate();
+        ICollection<ReportClosedServiceModel> Closed();
     }
 }

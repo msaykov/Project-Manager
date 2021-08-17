@@ -26,6 +26,10 @@
         public IActionResult ByEndDate()
             => View(report.ByEndDate());
 
+        [Authorize]
+        public IActionResult Closed()
+           => View(report.Closed());
+
 
     }
 }

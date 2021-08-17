@@ -12,6 +12,7 @@
             this.Materials = new List<Material>();
             this.Notes = new List<Note>();
             this.StartDate = DateTime.Now;
+            this.ClosingDate = DateTime.Now;
         }
         [Key]
         public int Id { get; private set; }
@@ -39,6 +40,8 @@
         public DateTime StartDate { get; private set; }
 
         public DateTime EndDate { get; set; }
+
+        public DateTime ClosingDate { get; set; }
 
         public int StatusId { get; set; }
         

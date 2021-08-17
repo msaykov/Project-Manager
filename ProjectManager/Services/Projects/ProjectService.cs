@@ -96,6 +96,7 @@
         {
             var statuses = this.data
                 .Statuses
+                .Where(s => s.Name != "Done")
                 .Select(s => new StatusesServiceModel 
                 { 
                     Id = s.Id,
@@ -192,7 +193,7 @@
             return projectEntity.Id; 
         }
 
-        public void Edit(int projectid, string name, string type, string town, string endDate, string description, int statusId)
+        public void Edit(int projectId, string name, string type, string town, string endDate, string description, int statusId)
         {
             var currentType = this.GetProjectType(type);
             var projectType = currentType == null ? new ProjectType { Name = type } : currentType;
@@ -207,7 +208,7 @@
             DateTime.TryParse(endDate, out date);
 
 
-            var projectEntity = this.GetProjectById(projectid);
+            var projectEntity = this.GetProjectById(projectId);
 
             projectEntity.Name = name;
             projectEntity.Town = projectTown;
@@ -217,6 +218,15 @@
             projectEntity.Status = currentStatus;
             projectEntity.IsClosed = isClosed;
 
+            this.data.SaveChanges();
+        }
+
+        public void Close(int projectId)
+        {
+            var projectEntity = this.GetProjectById(projectId);
+            var statusEntity = this.data.Statuses.FirstOrDefault(s => s.Name == "Done");
+            projectEntity.Status = statusEntity;
+            projectEntity.IsClosed = true;
             this.data.SaveChanges();
         }
     }
