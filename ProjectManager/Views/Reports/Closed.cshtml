@@ -1,0 +1,45 @@
+﻿@model ICollection<ReportClosedServiceModel>
+
+@{
+    ViewData["Title"] = "Closed Projects";
+}
+<div class="text-center">
+    <h1 class="item-title">@ViewData["Title"]</h1>
+</div>
+@if (!Model.Any())
+{
+    <div class="text-center">
+        <h4 class="alert-heading">No closed projects.</h4>
+    </div>
+}
+else
+{
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <tr class="clickable text-center">
+                    <th scope="col">Name</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">Closing Date</th>
+                    <th scope="col">Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr class="clickable text-center">
+                        <td>@project.ProjectName</td>
+                        <td>@project.Owner</td>
+                        <td>@project.StartDate</td>
+                        <td>@project.ClosingDate</td>
+                        <td>@project.Duration.Days</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<div class="d-flex justify-content-center">
+    <a asp-controller="Reports" asp-action="All" class="btn btn-primary">Back</a>
+</div>

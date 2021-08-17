@@ -14,6 +14,7 @@ namespace ProjectManager
     using ProjectManager.Services.Owners;
     using ProjectManager.Services.Projects;
     using ProjectManager.Services.Reports;
+    using ProjectManager.Services.Statistics;
 
     public class Startup
     {
@@ -48,6 +49,7 @@ namespace ProjectManager
             services.AddTransient<INoteService, NoteService>();
             services.AddTransient<IOwnerService, OwnerService>();
             services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<IStatisticsService, StatisticsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

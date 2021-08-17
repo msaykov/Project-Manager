@@ -30,29 +30,6 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            //builder
-            //    .Entity<Project>()
-            //    .HasMany(pm => pm.Materials)
-            //    .WithMany(m => m.Projects);
-            ////.HasForeignKey(pm => pm.ProjectId)
-            ////.OnDelete(DeleteBehavior.Restrict);
-
-            //builder
-            //    .Entity<Material>()
-            //    .HasMany(pm => pm.Projects)
-            //    .WithMany(m => m.Materials);
-
-            //builder
-            //    .Entity<ProjectMaterials>()
-            //    .HasOne<Material>(pm => pm.Material)
-            //    .WithMany(pm => pm.Projects)
-            //    .HasForeignKey(pm => pm.MaterialId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //builder
-            //    .Entity<ProjectMaterials>()
-            //    .HasKey(pm => new { pm.ProjectId, pm.MaterialId });
-
             builder
                 .Entity<Material>()
                 .Property(m => m.Price)

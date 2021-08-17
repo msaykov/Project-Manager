@@ -1,12 +1,10 @@
-﻿namespace ProjectManager.Services.Reports
+﻿namespace ProjectManager.Services.Projects
 {
     using System;
 
-    public class ReportDateServiceModel
+    public class ExpiringProjectsServiceModel
     {
         public string ProjectName { get; set; }
-
-        public string Owner { get; set; }
 
         public string EndDate { get; set; }
 
