@@ -17,7 +17,7 @@
         public ICollection<ProjectServiceModel> MyProjects(string userId)
             => data
                 .Projects
-                .Where(p => p.Owner.UserId == userId)
+                .Where(p => p.Owner.UserId == userId && p.Status.Name != "Done")
                 .OrderBy(p => p.EndDate)
                 .Select(p => new ProjectServiceModel
                 {
@@ -57,6 +57,7 @@
 
             return projectsQuery
                 .OrderBy(p => p.EndDate)
+                .Where(p => p.Status.Name != "Done")
                 .Select(p => new ProjectServiceModel
                 {
                     Id = p.Id,

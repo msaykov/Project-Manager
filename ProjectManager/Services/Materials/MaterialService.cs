@@ -23,7 +23,7 @@
                     SapNumber = m.SapNumber,
                     Price = m.Price,
                     Quantity = m.Quantity
-                })
+                })           
                 .ToList();
 
 
@@ -47,48 +47,33 @@
         //}
 
 
-        public void Add(int projectId, int MaterialId, /*int MaterialTypeId,*/ int quantity)
+        public void Add(int projectId, int materialId, /*int MaterialTypeId,*/ int quantity)
         {
             var currentProject = GetProjectById(projectId);
-            var projectMaterials = this.data
-                .Materials
-                .Where(m => m.Projects.Any(p => p.Id == projectId))
-                .ToList();
-
             var currentMaterial = this.data
                 .Materials
-                .Where(m => m.Id == MaterialId)
+                .Where(m => m.Id == materialId)
                 .FirstOrDefault();
+            var currentType = GetMaterialType(currentMaterial.MaterialTypeId);
+            var materialType = currentType == null ? new MaterialType { Name = currentMaterial.MaterialType.Name } : currentType;
 
-            currentMaterial.Quantity += quantity;
-
-            //var materialTypeEntity = this.data
-            //    .MaterialTypes
-            //    .Where(mt => mt.Id == MaterialTypeId)
-            //    .FirstOrDefault();
-
-
-            //var materialEntity = new Material
-            //{
-            //    Name = currentMaterial.Name,
-            //    MaterialType = materialTypeEntity,
-            //    SapNumber = currentMaterial.SapNumber,
-            //    Price = currentMaterial.Price,
-            //    Quantity = quantity,
-            //};
-
-            if (!projectMaterials.Any(m => m.Id == MaterialId))
+            var materialEntity = new Material
             {
-                //projectMaterials.Add(currentMaterial);
-                currentProject.Materials.Add(currentMaterial);
-            }            
+                Name = currentMaterial.Name,
+                MaterialType = materialType,
+                SapNumber = currentMaterial.SapNumber,
+                Price = currentMaterial.Price,
+                Quantity = quantity,
+            };
+
+            currentProject.Materials.Add(materialEntity);
             this.data.SaveChanges();
         }
 
-        public MaterialType GetMaterialType(string name)
+        public MaterialType GetMaterialType(int id)
             => this.data
                    .MaterialTypes
-                   .FirstOrDefault(mt => mt.Name == name);
+                   .FirstOrDefault(mt => mt.Id == id);
 
         public Project GetProjectById(int id)
              => this.data

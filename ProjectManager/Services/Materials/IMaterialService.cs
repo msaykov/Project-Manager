@@ -16,7 +16,7 @@
         //ICollection<MaterialNamesServiceModel> GetMaterialNames(int typeId);
         ICollection<MaterialNamesServiceModel> GetMaterialNames();
 
-        MaterialType GetMaterialType(string name);
+        MaterialType GetMaterialType(int id);
 
         Project GetProjectById(int id);
 
